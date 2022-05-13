@@ -1,0 +1,1978 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Mysql 基础</title>
+    <url>/xz.github.io/mysql-base/</url>
+    <content><![CDATA[<h2 id="目录"><a class="anchor" href="#目录">#</a> 目录</h2>
+<pre><code>一、为什么要学习数据库
+二、数据库的相关概念      
+	DBMS、DB、SQL
+三、数据库存储数据的特点
+四、初始MySQL
+	MySQL产品的介绍        
+	MySQL产品的安装          ★        
+	MySQL服务的启动和停止     ★
+	MySQL服务的登录和退出     ★      
+	MySQL的常见命令和语法规范      
+五、DQL语言的学习   ★              
+	基础查询        ★             
+	条件查询  	   ★			
+	排序查询  	   ★				
+	常见函数        ★               
+	分组函数        ★              
+	分组查询		   ★			
+	连接查询	 	★			
+	子查询       √                  
+	分页查询       ★              
+	union联合查询	√			
+	
+六、DML语言的学习    ★             
+	插入语句						
+	修改语句						
+	删除语句						
+七、DDL语言的学习  
+	库和表的管理	 √				
+	常见数据类型介绍  √          
+	常见约束  	  √			
+八、TCL语言的学习
+	事务和事务处理                 
+九、视图的讲解           √
+十、变量                      
+十一、存储过程和函数   
+十二、流程控制结构       
+</code></pre>
+<h2 id="数据库的好处"><a class="anchor" href="#数据库的好处">#</a> 数据库的好处</h2>
+<pre><code>1.持久化数据到本地
+2.可以实现结构化查询，方便管理
+</code></pre>
+<h2 id="数据库相关概念"><a class="anchor" href="#数据库相关概念">#</a> 数据库相关概念</h2>
+<pre><code>1、DB：数据库，保存一组有组织的数据的容器
+2、DBMS：数据库管理系统，又称为数据库软件（产品），用于管理DB中的数据
+3、SQL:结构化查询语言，用于和DBMS通信的语言
+</code></pre>
+<h2 id="数据库存储数据的特点"><a class="anchor" href="#数据库存储数据的特点">#</a> 数据库存储数据的特点</h2>
+<pre><code>1、将数据放到表中，表再放到库中
+2、一个数据库中可以有多个表，每个表都有一个的名字，用来标识自己。表名具有唯一性。
+3、表具有一些特性，这些特性定义了数据在表中如何存储，类似java中 “类”的设计。
+4、表由列组成，我们也称为字段。所有表都是由一个或多个列组成的，每一列类似java 中的”属性”
+5、表中的数据是按行存储的，每一行类似于java中的“对象”。
+</code></pre>
+<h2 id="mysql产品的介绍和安装"><a class="anchor" href="#mysql产品的介绍和安装">#</a> MySQL 产品的介绍和安装</h2>
+<h3 id="mysql服务的启动和停止"><a class="anchor" href="#mysql服务的启动和停止">#</a> MySQL 服务的启动和停止</h3>
+<pre><code>方式一：计算机——右击管理——服务
+方式二：通过管理员身份运行
+net start 服务名（启动服务）
+net stop 服务名（停止服务）
+</code></pre>
+<h3 id="mysql服务的登录和退出"><a class="anchor" href="#mysql服务的登录和退出">#</a> MySQL 服务的登录和退出</h3>
+<pre><code>方式一：通过mysql自带的客户端
+只限于root用户
+
+方式二：通过windows自带的客户端
+登录：
+mysql 【-h主机名 -P端口号 】-u用户名 -p密码
+
+退出：
+exit或ctrl+C
+</code></pre>
+<h3 id="mysql的常见命令"><a class="anchor" href="#mysql的常见命令">#</a> MySQL 的常见命令</h3>
+<pre><code>1.查看当前所有的数据库
+show databases;
+2.打开指定的库
+use 库名
+3.查看当前库的所有表
+show tables;
+4.查看其它库的所有表
+show tables from 库名;
+5.创建表
+create table 表名(
+
+	列名 列类型,
+	列名 列类型，
+	。。。
+);
+6.查看表结构
+desc 表名;
+
+
+7.查看服务器的版本
+方式一：登录到mysql服务端
+select version();
+方式二：没有登录到mysql服务端
+mysql --version
+或
+mysql --V
+</code></pre>
+<h3 id="mysql的语法规范"><a class="anchor" href="#mysql的语法规范">#</a> MySQL 的语法规范</h3>
+<pre><code>1.不区分大小写,但建议关键字大写，表名、列名小写
+2.每条命令最好用分号结尾
+3.每条命令根据需要，可以进行缩进 或换行
+4.注释
+	单行注释：#注释文字
+	单行注释：-- 注释文字
+	多行注释：/* 注释文字  */
+</code></pre>
+<h3 id="sql的语言分类"><a class="anchor" href="#sql的语言分类">#</a> SQL 的语言分类</h3>
+<pre><code>DQL（Data Query Language）：数据查询语言
+	select 
+DML(Data Manipulate Language):数据操作语言
+	insert 、update、delete
+DDL（Data Define Languge）：数据定义语言
+	create、drop、alter
+TCL（Transaction Control Language）：事务控制语言
+	commit、rollback
+</code></pre>
+<h3 id="sql的常见命令"><a class="anchor" href="#sql的常见命令">#</a> SQL 的常见命令</h3>
+<pre><code>show databases； 查看所有的数据库
+use 库名； 打开指定 的库
+show tables ; 显示库中的所有表
+show tables from 库名;显示指定库中的所有表
+create table 表名(
+	字段名 字段类型,	
+	字段名 字段类型
+); 创建表
+
+desc 表名; 查看指定表的结构
+select * from 表名;显示表中的所有数据
+</code></pre>
+<h2 id="dql语言的学习"><a class="anchor" href="#dql语言的学习">#</a> DQL 语言的学习</h2>
+<h3 id="进阶1基础查询"><a class="anchor" href="#进阶1基础查询">#</a> 进阶 1：基础查询</h3>
+<pre><code>语法：
+SELECT 要查询的东西
+【FROM 表名】;
+
+类似于Java中 :System.out.println(要打印的东西);
+特点：
+① 通过select查询完的结果 ，是一个虚拟的表格，不是真实存在
+② 要查询的东西可以是常量值、可以是表达式、可以是字段、可以是函数
+</code></pre>
+<h3 id="进阶2条件查询"><a class="anchor" href="#进阶2条件查询">#</a> 进阶 2：条件查询</h3>
+<pre><code>条件查询：根据条件过滤原始表的数据，查询到想要的数据
+语法：
+select 
+	要查询的字段|表达式|常量值|函数
+from 
+	表
+where 
+	条件 ;
+
+分类：
+一、条件表达式
+	示例：salary&gt;10000
+	条件运算符：
+	&gt; &lt; &gt;= &lt;= = != &lt;&gt;
+
+二、逻辑表达式
+示例：salary&gt;10000 &amp;&amp; salary&lt;20000
+
+逻辑运算符：
+
+	and（&amp;&amp;）:两个条件如果同时成立，结果为true，否则为false
+	or(||)：两个条件只要有一个成立，结果为true，否则为false
+	not(!)：如果条件成立，则not后为false，否则为true
+
+三、模糊查询
+示例：last_name like 'a%'
+</code></pre>
+<h3 id="进阶3排序查询"><a class="anchor" href="#进阶3排序查询">#</a> 进阶 3：排序查询</h3>
+<pre><code>语法：
+select
+	要查询的东西
+from
+	表
+where 
+	条件
+order by 排序的字段|表达式|函数|别名 【asc|desc】
+</code></pre>
+<h3 id="进阶4常见函数"><a class="anchor" href="#进阶4常见函数">#</a> 进阶 4：常见函数</h3>
+<pre><code>一、单行函数
+1、字符函数
+	concat拼接
+	substr截取子串
+	upper转换成大写
+	lower转换成小写
+	trim去前后指定的空格和字符
+	ltrim去左边空格
+	rtrim去右边空格
+	replace替换
+	lpad左填充
+	rpad右填充
+	instr返回子串第一次出现的索引
+	length 获取字节个数
+	
+2、数学函数
+	round 四舍五入
+	rand 随机数
+	floor 向下取整
+	ceil 向上取整
+	mod 取余
+	truncate 截断
+3、日期函数
+	now当前系统日期+时间
+	curdate当前系统日期
+	curtime当前系统时间
+	str_to_date 将字符转换成日期
+	date_format将日期转换成字符
+4、流程控制函数
+	if 处理双分支
+	case语句 处理多分支
+		情况1：处理等值判断
+		情况2：处理条件判断
+	
+5、其他函数
+	version版本
+	database当前库
+	user当前连接用户
+</code></pre>
+<p>二、分组函数</p>
+<pre><code>	sum 求和
+	max 最大值
+	min 最小值
+	avg 平均值
+	count 计数
+
+	特点：
+	1、以上五个分组函数都忽略null值，除了count(*)
+	2、sum和avg一般用于处理数值型
+		max、min、count可以处理任何数据类型
+    3、都可以搭配distinct使用，用于统计去重后的结果
+	4、count的参数可以支持：
+		字段、*、常量值，一般放1
+
+	   建议使用 count(*)
+</code></pre>
+<h2 id="进阶5分组查询"><a class="anchor" href="#进阶5分组查询">#</a> 进阶 5：分组查询</h2>
+<pre><code>语法：
+select 查询的字段，分组函数
+from 表
+group by 分组的字段
+
+
+特点：
+1、可以按单个字段分组
+2、和分组函数一同查询的字段最好是分组后的字段
+3、分组筛选
+		针对的表	位置			关键字
+分组前筛选：	原始表		group by的前面		where
+分组后筛选：	分组后的结果集	group by的后面		having
+
+4、可以按多个字段分组，字段之间用逗号隔开
+5、可以支持排序
+6、having后可以支持别名
+</code></pre>
+<h2 id="进阶6多表连接查询"><a class="anchor" href="#进阶6多表连接查询">#</a> 进阶 6：多表连接查询</h2>
+<pre><code>笛卡尔乘积：如果连接条件省略或无效则会出现
+解决办法：添加上连接条件
+</code></pre>
+<p>一、传统模式下的连接 ：等值连接 —— 非等值连接</p>
+<pre><code>1.等值连接的结果 = 多个表的交集
+2.n表连接，至少需要n-1个连接条件
+3.多个表不分主次，没有顺序要求
+4.一般为表起别名，提高阅读性和性能
+</code></pre>
+<p>二、sql99 语法：通过 join 关键字实现连接</p>
+<pre><code>含义：1999年推出的sql语法
+支持：
+等值连接、非等值连接 （内连接）
+外连接
+交叉连接
+
+语法：
+
+select 字段，...
+from 表1
+【inner|left outer|right outer|cross】join 表2 on  连接条件
+【inner|left outer|right outer|cross】join 表3 on  连接条件
+【where 筛选条件】
+【group by 分组字段】
+【having 分组后的筛选条件】
+【order by 排序的字段或表达式】
+
+好处：语句上，连接条件和筛选条件实现了分离，简洁明了！
+</code></pre>
+<p>三、自连接</p>
+<p>案例：查询员工名和直接上级的名称</p>
+<p>sql99</p>
+<pre><code>SELECT e.last_name,m.last_name
+FROM employees e
+JOIN employees m ON e.`manager_id`=m.`employee_id`;
+</code></pre>
+<p>sql92</p>
+<pre><code>SELECT e.last_name,m.last_name
+FROM employees e,employees m 
+WHERE e.`manager_id`=m.`employee_id`;
+</code></pre>
+<h2 id="进阶7子查询"><a class="anchor" href="#进阶7子查询">#</a> 进阶 7：子查询</h2>
+<p>含义：</p>
+<pre><code>一条查询语句中又嵌套了另一条完整的select语句，其中被嵌套的select语句，称为子查询或内查询
+在外面的查询语句，称为主查询或外查询
+</code></pre>
+<p>特点：</p>
+<pre><code>1、子查询都放在小括号内
+2、子查询可以放在from后面、select后面、where后面、having后面，但一般放在条件的右侧
+3、子查询优先于主查询执行，主查询使用了子查询的执行结果
+4、子查询根据查询结果的行数不同分为以下两类：
+① 单行子查询
+	结果集只有一行
+	一般搭配单行操作符使用：&gt; &lt; = &lt;&gt; &gt;= &lt;= 
+	非法使用子查询的情况：
+	a、子查询的结果为一组值
+	b、子查询的结果为空
+	
+② 多行子查询
+	结果集有多行
+	一般搭配多行操作符使用：any、all、in、not in
+	in： 属于子查询结果中的任意一个就行
+	any和all往往可以用其他查询代替
+</code></pre>
+<h2 id="进阶8分页查询"><a class="anchor" href="#进阶8分页查询">#</a> 进阶 8：分页查询</h2>
+<p>应用场景：</p>
+<pre><code>实际的web项目中需要根据用户的需求提交对应的分页查询的sql语句
+</code></pre>
+<p>语法：</p>
+<pre><code>select 字段|表达式,...
+from 表
+【where 条件】
+【group by 分组字段】
+【having 条件】
+【order by 排序的字段】
+limit 【起始的条目索引，】条目数;
+</code></pre>
+<p>特点：</p>
+<pre><code>1.起始条目索引从0开始
+
+2.limit子句放在查询语句的最后
+
+3.公式：select * from  表 limit （page-1）*sizePerPage,sizePerPage
+假如:
+每页显示条目数sizePerPage
+要显示的页数 page
+</code></pre>
+<h2 id="进阶9联合查询"><a class="anchor" href="#进阶9联合查询">#</a> 进阶 9：联合查询</h2>
+<p>引入：<br />
+union 联合、合并</p>
+<p>语法：</p>
+<pre><code>select 字段|常量|表达式|函数 【from 表】 【where 条件】 union 【all】
+select 字段|常量|表达式|函数 【from 表】 【where 条件】 union 【all】
+select 字段|常量|表达式|函数 【from 表】 【where 条件】 union  【all】
+.....
+select 字段|常量|表达式|函数 【from 表】 【where 条件】
+</code></pre>
+<p>特点：</p>
+<pre><code>1、多条查询语句的查询的列数必须是一致的
+2、多条查询语句的查询的列的类型几乎相同
+3、union代表去重，union all代表不去重
+</code></pre>
+<h2 id="dml语言"><a class="anchor" href="#dml语言">#</a> DML 语言</h2>
+<h3 id="插入"><a class="anchor" href="#插入">#</a> 插入</h3>
+<p>语法：<br />
+insert into 表名 (字段名，...)<br />
+ values (值 1，...);</p>
+<p>特点：</p>
+<pre><code>1、字段类型和值类型一致或兼容，而且一一对应
+2、可以为空的字段，可以不用插入值，或用null填充
+3、不可以为空的字段，必须插入值
+4、字段个数和值的个数必须一致
+5、字段可以省略，但默认所有字段，并且顺序和表中的存储顺序一致
+</code></pre>
+<h3 id="修改"><a class="anchor" href="#修改">#</a> 修改</h3>
+<p>修改单表语法：</p>
+<pre><code>update 表名 set 字段=新值,字段=新值
+【where 条件】
+</code></pre>
+<p>修改多表语法：</p>
+<pre><code>update 表1 别名1,表2 别名2
+set 字段=新值，字段=新值
+where 连接条件
+and 筛选条件
+</code></pre>
+<h3 id="删除"><a class="anchor" href="#删除">#</a> 删除</h3>
+<p>方式 1：delete 语句</p>
+<p>单表的删除： ★<br />
+delete from 表名 【where 筛选条件】</p>
+<p>多表的删除：<br />
+delete 别名 1，别名 2<br />
+from 表 1 别名 1，表 2 别名 2<br />
+where 连接条件<br />
+ and 筛选条件；</p>
+<p>方式 2：truncate 语句</p>
+<pre><code>truncate table 表名
+</code></pre>
+<p>两种方式的区别【面试题】</p>
+<pre><code>#1.truncate不能加where条件，而delete可以加where条件
+
+#2.truncate的效率高一丢丢
+
+#3.truncate 删除带自增长的列的表后，如果再插入数据，数据从1开始
+#delete 删除带自增长列的表后，如果再插入数据，数据从上一次的断点处开始
+
+#4.truncate删除不能回滚，delete删除可以回滚
+</code></pre>
+<h2 id="ddl语句"><a class="anchor" href="#ddl语句">#</a> DDL 语句</h2>
+<h3 id="库和表的管理"><a class="anchor" href="#库和表的管理">#</a> 库和表的管理</h3>
+<p>库的管理：</p>
+<pre><code>一、创建库
+create database 库名
+二、删除库
+drop database 库名
+</code></pre>
+<p>表的管理：<br />
+#1. 创建表</p>
+<pre><code>CREATE TABLE IF NOT EXISTS stuinfo(
+	stuId INT,
+	stuName VARCHAR(20),
+	gender CHAR,
+	bornDate DATETIME
+	
+
+);
+
+DESC studentinfo;
+#2.修改表 alter
+语法：ALTER TABLE 表名 ADD|MODIFY|DROP|CHANGE COLUMN 字段名 【字段类型】;
+
+#①修改字段名
+ALTER TABLE studentinfo CHANGE  COLUMN sex gender CHAR;
+
+#②修改表名
+ALTER TABLE stuinfo RENAME [TO]  studentinfo;
+#③修改字段类型和列级约束
+ALTER TABLE studentinfo MODIFY COLUMN borndate DATE ;
+
+#④添加字段
+
+ALTER TABLE studentinfo ADD COLUMN email VARCHAR(20) first;
+#⑤删除字段
+ALTER TABLE studentinfo DROP COLUMN email;
+
+
+#3.删除表
+
+DROP TABLE [IF EXISTS] studentinfo;
+</code></pre>
+<h3 id="常见类型"><a class="anchor" href="#常见类型">#</a> 常见类型</h3>
+<pre><code>整型：
+	
+小数：
+	浮点型
+	定点型
+字符型：
+日期型：
+Blob类型：
+</code></pre>
+<h3 id="常见约束"><a class="anchor" href="#常见约束">#</a> 常见约束</h3>
+<pre><code>NOT NULL
+DEFAULT
+UNIQUE
+CHECK
+PRIMARY KEY
+FOREIGN KEY
+</code></pre>
+<h2 id="数据库事务"><a class="anchor" href="#数据库事务">#</a> 数据库事务</h2>
+<h3 id="含义"><a class="anchor" href="#含义">#</a> 含义</h3>
+<pre><code>通过一组逻辑操作单元（一组DML——sql语句），将数据从一种状态切换到另外一种状态
+</code></pre>
+<h3 id="特点"><a class="anchor" href="#特点">#</a> 特点</h3>
+<pre><code>（ACID）
+原子性：要么都执行，要么都回滚
+一致性：保证数据的状态操作前和操作后保持一致
+隔离性：多个事务同时操作相同数据库的同一个数据时，一个事务的执行不受另外一个事务的干扰
+持久性：一个事务一旦提交，则数据将持久化到本地，除非其他事务对其进行修改
+</code></pre>
+<p>相关步骤：</p>
+<pre><code>1、开启事务
+2、编写事务的一组逻辑操作单元（多条sql语句）
+3、提交事务或回滚事务
+</code></pre>
+<h3 id="事务的分类"><a class="anchor" href="#事务的分类">#</a> 事务的分类：</h3>
+<p>隐式事务，没有明显的开启和结束事务的标志</p>
+<pre><code>比如
+insert、update、delete语句本身就是一个事务
+</code></pre>
+<p>显式事务，具有明显的开启和结束事务的标志</p>
+<pre><code>	1、开启事务
+	取消自动提交事务的功能
+	
+	2、编写事务的一组逻辑操作单元（多条sql语句）
+	insert
+	update
+	delete
+	
+	3、提交事务或回滚事务
+</code></pre>
+<h3 id="使用到的关键字"><a class="anchor" href="#使用到的关键字">#</a> 使用到的关键字</h3>
+<pre><code>set autocommit=0;
+start transaction;
+commit;
+rollback;
+
+savepoint  断点
+commit to 断点
+rollback to 断点
+</code></pre>
+<h3 id="事务的隔离级别"><a class="anchor" href="#事务的隔离级别">#</a> 事务的隔离级别:</h3>
+<p>事务并发问题如何发生？</p>
+<pre><code>当多个事务同时操作同一个数据库的相同数据时
+</code></pre>
+<p>事务的并发问题有哪些？</p>
+<pre><code>脏读：一个事务读取到了另外一个事务未提交的数据
+不可重复读：同一个事务中，多次读取到的数据不一致
+幻读：一个事务读取数据时，另外一个事务进行更新，导致第一个事务读取到了没有更新的数据
+</code></pre>
+<p>如何避免事务的并发问题？</p>
+<pre><code>通过设置事务的隔离级别
+1、READ UNCOMMITTED
+2、READ COMMITTED 可以避免脏读
+3、REPEATABLE READ 可以避免脏读、不可重复读和一部分幻读
+4、SERIALIZABLE可以避免脏读、不可重复读和幻读
+</code></pre>
+<p>设置隔离级别：</p>
+<pre><code>set session|global  transaction isolation level 隔离级别名;
+</code></pre>
+<p>查看隔离级别：</p>
+<pre><code>select @@tx_isolation;
+</code></pre>
+<h2 id="视图"><a class="anchor" href="#视图">#</a> 视图</h2>
+<p>含义：理解成一张虚拟的表</p>
+<p>视图和表的区别：</p>
+<pre><code>	使用方式	占用物理空间
+
+视图	完全相同	不占用，仅仅保存的是sql逻辑
+
+表	完全相同	占用
+</code></pre>
+<p>视图的好处：</p>
+<pre><code>1、sql语句提高重用性，效率高
+2、和表实现了分离，提高了安全性
+</code></pre>
+<h3 id="视图的创建"><a class="anchor" href="#视图的创建">#</a> 视图的创建</h3>
+<pre><code>语法：
+CREATE VIEW  视图名
+AS
+查询语句;
+</code></pre>
+<h3 id="视图的增删改查"><a class="anchor" href="#视图的增删改查">#</a> 视图的增删改查</h3>
+<pre><code>1、查看视图的数据 ★
+
+SELECT * FROM my_v4;
+SELECT * FROM my_v1 WHERE last_name='Partners';
+
+2、插入视图的数据
+INSERT INTO my_v4(last_name,department_id) VALUES('虚竹',90);
+
+3、修改视图的数据
+
+UPDATE my_v4 SET last_name ='梦姑' WHERE last_name='虚竹';
+
+
+4、删除视图的数据
+DELETE FROM my_v4;
+</code></pre>
+<h3 id="某些视图不能更新"><a class="anchor" href="#某些视图不能更新">#</a> 某些视图不能更新</h3>
+<pre><code>包含以下关键字的sql语句：分组函数、distinct、group  by、having、union或者union all
+常量视图
+Select中包含子查询
+join
+from一个不能更新的视图
+where子句的子查询引用了from子句中的表
+</code></pre>
+<h3 id="视图逻辑的更新"><a class="anchor" href="#视图逻辑的更新">#</a> 视图逻辑的更新</h3>
+<pre><code>#方式一：
+CREATE OR REPLACE VIEW test_v7
+AS
+SELECT last_name FROM employees
+WHERE employee_id&gt;100;
+
+#方式二:
+ALTER VIEW test_v7
+AS
+SELECT employee_id FROM employees;
+
+SELECT * FROM test_v7;
+</code></pre>
+<h3 id="视图的删除"><a class="anchor" href="#视图的删除">#</a> 视图的删除</h3>
+<pre><code>DROP VIEW test_v1,test_v2,test_v3;
+</code></pre>
+<h3 id="视图结构的查看"><a class="anchor" href="#视图结构的查看">#</a> 视图结构的查看</h3>
+<pre><code>DESC test_v7;
+SHOW CREATE VIEW test_v7;
+</code></pre>
+<h2 id="存储过程"><a class="anchor" href="#存储过程">#</a> 存储过程</h2>
+<p>含义：一组经过预先编译的 sql 语句的集合<br />
+好处：</p>
+<pre><code>1、提高了sql语句的重用性，减少了开发程序员的压力
+2、提高了效率
+3、减少了传输次数
+</code></pre>
+<p>分类：</p>
+<pre><code>1、无返回无参
+2、仅仅带in类型，无返回有参
+3、仅仅带out类型，有返回无参
+4、既带in又带out，有返回有参
+5、带inout，有返回有参
+注意：in、out、inout都可以在一个存储过程中带多个
+</code></pre>
+<h3 id="创建存储过程"><a class="anchor" href="#创建存储过程">#</a> 创建存储过程</h3>
+<p>语法：</p>
+<pre><code>create procedure 存储过程名(in|out|inout 参数名  参数类型,...)
+begin
+	存储过程体
+
+end
+</code></pre>
+<p>类似于方法：</p>
+<pre><code>修饰符 返回类型 方法名(参数类型 参数名,...)&#123;
+
+	方法体;
+&#125;
+</code></pre>
+<p>注意</p>
+<pre><code>1、需要设置新的结束标记
+delimiter 新的结束标记
+示例：
+delimiter $
+
+CREATE PROCEDURE 存储过程名(IN|OUT|INOUT 参数名  参数类型,...)
+BEGIN
+	sql语句1;
+	sql语句2;
+
+END $
+
+2、存储过程体中可以有多条sql语句，如果仅仅一条sql语句，则可以省略begin end
+
+3、参数前面的符号的意思
+in:该参数只能作为输入 （该参数不能做返回值）
+out：该参数只能作为输出（该参数只能做返回值）
+inout：既能做输入又能做输出
+</code></pre>
+<h2 id="调用存储过程"><a class="anchor" href="#调用存储过程">#</a> 调用存储过程</h2>
+<pre><code>call 存储过程名(实参列表)
+</code></pre>
+<h2 id="函数"><a class="anchor" href="#函数">#</a> 函数</h2>
+<h3 id="创建函数"><a class="anchor" href="#创建函数">#</a> 创建函数</h3>
+<p>学过的函数：LENGTH、SUBSTR、CONCAT 等<br />
+语法：</p>
+<pre><code>CREATE FUNCTION 函数名(参数名 参数类型,...) RETURNS 返回类型
+BEGIN
+	函数体
+
+END
+</code></pre>
+<h3 id="调用函数"><a class="anchor" href="#调用函数">#</a> 调用函数</h3>
+<pre><code>SELECT 函数名（实参列表）
+</code></pre>
+<h3 id="函数和存储过程的区别"><a class="anchor" href="#函数和存储过程的区别">#</a> 函数和存储过程的区别</h3>
+<pre><code>		关键字		调用语法	返回值			应用场景
+函数		FUNCTION	SELECT 函数()	只能是一个		一般用于查询结果为一个值并返回时，当有返回值而且仅仅一个
+存储过程	PROCEDURE	CALL 存储过程()	可以有0个或多个		一般用于更新
+</code></pre>
+<p>## 流程控制结构</p>
+<h3 id="系统变量"><a class="anchor" href="#系统变量">#</a> 系统变量</h3>
+<p>一、全局变量</p>
+<p>作用域：针对于所有会话（连接）有效，但不能跨重启</p>
+<pre><code>查看所有全局变量
+SHOW GLOBAL VARIABLES;
+查看满足条件的部分系统变量
+SHOW GLOBAL VARIABLES LIKE '%char%';
+查看指定的系统变量的值
+SELECT @@global.autocommit;
+为某个系统变量赋值
+SET @@global.autocommit=0;
+SET GLOBAL autocommit=0;
+</code></pre>
+<p>二、会话变量</p>
+<p>作用域：针对于当前会话（连接）有效</p>
+<pre><code>查看所有会话变量
+SHOW SESSION VARIABLES;
+查看满足条件的部分会话变量
+SHOW SESSION VARIABLES LIKE '%char%';
+查看指定的会话变量的值
+SELECT @@autocommit;
+SELECT @@session.tx_isolation;
+为某个会话变量赋值
+SET @@session.tx_isolation='read-uncommitted';
+SET SESSION tx_isolation='read-committed';
+</code></pre>
+<h3 id="自定义变量"><a class="anchor" href="#自定义变量">#</a> 自定义变量</h3>
+<p>一、用户变量</p>
+<p>声明并初始化：</p>
+<pre><code>SET @变量名=值;
+SET @变量名:=值;
+SELECT @变量名:=值;
+</code></pre>
+<p>赋值：</p>
+<pre><code>方式一：一般用于赋简单的值
+SET 变量名=值;
+SET 变量名:=值;
+SELECT 变量名:=值;
+
+
+方式二：一般用于赋表 中的字段值
+SELECT 字段名或表达式 INTO 变量
+FROM 表;
+</code></pre>
+<p>使用：</p>
+<pre><code>select @变量名;
+</code></pre>
+<p>二、局部变量</p>
+<p>声明：</p>
+<pre><code>declare 变量名 类型 【default 值】;
+</code></pre>
+<p>赋值：</p>
+<pre><code>方式一：一般用于赋简单的值
+SET 变量名=值;
+SET 变量名:=值;
+SELECT 变量名:=值;
+
+
+方式二：一般用于赋表 中的字段值
+SELECT 字段名或表达式 INTO 变量
+FROM 表;
+</code></pre>
+<p>使用：</p>
+<pre><code>select 变量名
+</code></pre>
+<p>二者的区别：</p>
+<pre><code>		作用域			定义位置		语法
+</code></pre>
+<p>用户变量	当前会话		会话的任何地方		加 @符号，不用指定类型<br />
+局部变量	定义它的 BEGIN END 中 	BEGIN END 的第一句话	一般不用加 @, 需要指定类型</p>
+<h3 id="分支"><a class="anchor" href="#分支">#</a> 分支</h3>
+<p>一、if 函数<br />
+语法：if (条件，值 1，值 2)<br />
+ 特点：可以用在任何位置</p>
+<p>二、case 语句</p>
+<p>语法：</p>
+<pre><code>情况一：类似于switch
+case 表达式
+when 值1 then 结果1或语句1(如果是语句，需要加分号) 
+when 值2 then 结果2或语句2(如果是语句，需要加分号)
+...
+else 结果n或语句n(如果是语句，需要加分号)
+end 【case】（如果是放在begin end中需要加上case，如果放在select后面不需要）
+
+情况二：类似于多重if
+case 
+when 条件1 then 结果1或语句1(如果是语句，需要加分号) 
+when 条件2 then 结果2或语句2(如果是语句，需要加分号)
+...
+else 结果n或语句n(如果是语句，需要加分号)
+end 【case】（如果是放在begin end中需要加上case，如果放在select后面不需要）
+</code></pre>
+<p>特点：<br />
+可以用在任何位置</p>
+<p>三、if elseif 语句</p>
+<p>语法：</p>
+<pre><code>if 情况1 then 语句1;
+elseif 情况2 then 语句2;
+...
+else 语句n;
+end if;
+</code></pre>
+<p>特点：<br />
+只能用在 begin end 中！！！！！！！！！！！！！！！</p>
+<p>三者比较：<br />
+应用场合<br />
+ if 函数		简单双分支<br />
+ case 结构	等值判断 的多分支<br />
+ if 结构		区间判断 的多分支</p>
+<h3 id="循环"><a class="anchor" href="#循环">#</a> 循环</h3>
+<p>语法：</p>
+<pre><code>【标签：】WHILE 循环条件  DO
+	循环体
+END WHILE 【标签】;
+</code></pre>
+<p>特点：</p>
+<pre><code>只能放在BEGIN END里面
+
+如果要搭配leave跳转语句，需要使用标签，否则可以不用标签
+
+leave类似于java中的break语句，跳出所在循环！！！</code></pre>
+]]></content>
+      <categories>
+        <category>CS</category>
+        <category>DB</category>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>CS</tag>
+        <tag>DB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>后端知识点梳理</title>
+    <url>/xz.github.io/hello-world/</url>
+    <content><![CDATA[<details class="info"><summary>针对于后端的知识点架构梳理:</summary><div>
+<blockquote>
+<ul>
+<li>cache
+<ul>
+<li>redis</li>
+</ul>
+</li>
+<li>db
+<ul>
+<li>mysql
+<ul>
+<li>acid</li>
+<li>bascial syntax</li>
+<li>innodb</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>design pattern</li>
+<li>distributed system
+<ul>
+<li>system architechure</li>
+<li>high availability</li>
+<li>high performance</li>
+<li>high scalability</li>
+</ul>
+</li>
+<li>hardware
+<ul>
+<li>cpu</li>
+<li>cpu cache</li>
+<li>tlb</li>
+</ul>
+</li>
+<li>micro service</li>
+<li>network</li>
+<li>os</li>
+<li>parallel</li>
+<li>security
+<ul>
+<li>csrf</li>
+<li>replay</li>
+<li>sql injection</li>
+<li>sync flood</li>
+<li>xss</li>
+</ul>
+</li>
+<li>server
+<ul>
+<li>concurrency limiter</li>
+<li>io model</li>
+<li>load balance</li>
+<li>memory pool</li>
+<li>thread pool</li>
+<li>timer</li>
+<li>rpc</li>
+</ul>
+</li>
+<li>algorithm
+<ul>
+<li>knowledge</li>
+<li>algorithm category</li>
+</ul>
+</li>
+<li>system design
+<ul>
+<li>compile seq</li>
+<li>counter</li>
+<li>distributed log</li>
+<li>feed</li>
+<li>garbage</li>
+<li>im</li>
+<li>kv ttl</li>
+<li>lottery</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</div></details>
+]]></content>
+      <tags>
+        <tag>计算机技术</tag>
+        <tag>整理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>手写操作系统</title>
+    <url>/xz.github.io/computer-science/os/build_os/</url>
+    <content><![CDATA[<h1 id="搭建操作系统"><a class="anchor" href="#搭建操作系统">#</a> 搭建操作系统</h1>
+<h2 id="创建环境"><a class="anchor" href="#创建环境">#</a> 创建环境</h2>
+<p>我使用的是 ubuntu 的虚拟机系统，大家可以根据自己的喜好使用不同的操作系统</p>
+<h3 id="安装gcc"><a class="anchor" href="#安装gcc">#</a> 安装 gcc</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">apt</span> <span class="token function">install</span> gcc</pre></td></tr><tr><td data-num="2"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">apt</span> <span class="token function">install</span> <span class="token function">make</span></pre></td></tr></table></figure><h3 id="安装nasm编译器"><a class="anchor" href="#安装nasm编译器">#</a> 安装 nasm 编译器</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">tar</span> -xvf nasm-2.14.02.tar.gz -C /usr/local/os/    <span class="token comment">#解压 nasm 编译器文件</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token builtin class-name">cd</span> nasm-2.14.02</pre></td></tr><tr><td data-num="4"></td><td data-command="[root@localhost] $"></td><td><pre>./configure</pre></td></tr><tr><td data-num="5"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="6"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><h3 id="安装bochs环境"><a class="anchor" href="#安装bochs环境">#</a> 安装 Bochs 环境</h3>
+<p>Bochs 的所有硬件配置在  <code>.bochsrc</code>  文件中<br />
+利用  <code>.bochsrc</code>  文件来配置一个最简单的概念寄存器<br />
+ <code>.bochsrc</code>  文件中注意以下配置</p>
+<blockquote>
+<ol>
+<li>floppy 和 boot: 表示 bochs 从软盘启动，软盘镜像是当前目录下的 boot.img</li>
+<li>log: 是 bochs 的执行日志</li>
+<li>debugger_log: 过去的调试记录。可以去分析问题和验证 cpu 的状态等，不用返回执行<br />
+参考的 <code>.bochsrc</code>  文件中将大部分数据都存在了 Output 目录下，所以需要提前在项目根目录下创建好 Ouput 文件夹</li>
+</ol>
+</blockquote>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command=""></td><td><pre><span class="token comment"># 安装 bochs 环境</span></pre></td></tr><tr><td data-num="2"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> bochs</pre></td></tr><tr><td data-num="3"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> bximage</pre></td></tr></table></figure><h2 id="编译镜像并运行"><a class="anchor" href="#编译镜像并运行">#</a> 编译镜像并运行</h2>
+<h3 id="step1-准备一个-bootasm文件"><a class="anchor" href="#step1-准备一个-bootasm文件">#</a> step1. 准备一个 boot.asm 文件</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>nasm boot.asm -o boot.bin</pre></td></tr></table></figure><div class="note info">
+<p>知识回顾：当计算机加电自检后，BIOS 会把启动盘的第一个扇区加载到地址 0x7c00，并且执行其中的代码</p>
+</div>
+<p>这里给大家提供了个 boot.asm 文件示例</p>
+<figure class="highlight js"><figcaption data-lang="JavaScript"></figcaption><table><tr><td data-num="1"></td><td><pre>org <span class="token number">0x7C00</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token constant">BASE</span> equ 07C00H</pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token literal-property property">label_start</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    mov ax<span class="token punctuation">,</span> cs</pre></td></tr><tr><td data-num="6"></td><td><pre>    mov ds<span class="token punctuation">,</span> ax</pre></td></tr><tr><td data-num="7"></td><td><pre>    mov es<span class="token punctuation">,</span> ax</pre></td></tr><tr><td data-num="8"></td><td><pre>    mov ss<span class="token punctuation">,</span> ax</pre></td></tr><tr><td data-num="9"></td><td><pre>    mov sp<span class="token punctuation">,</span> <span class="token constant">BASE</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token punctuation">;</span> Clear screen</pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">AH</span> <span class="token operator">=</span> 06H Scroll screen <span class="token keyword">in</span> a specific range</pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">AL</span> <span class="token operator">=</span> <span class="token number">0</span> Clear screen</pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">BH</span> <span class="token operator">=</span> 07H <span class="token number">0</span> <span class="token operator">-</span> black screen<span class="token punctuation">;</span> 7H <span class="token operator">-</span> white font<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">CH</span> <span class="token operator">=</span> start column number</pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">CL</span> <span class="token operator">=</span> start row number</pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DH</span> <span class="token operator">=</span> end column number</pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DL</span> <span class="token operator">=</span> end row number</pre></td></tr><tr><td data-num="19"></td><td><pre>    mov ax<span class="token punctuation">,</span> 0600H</pre></td></tr><tr><td data-num="20"></td><td><pre>    mov bx<span class="token punctuation">,</span> 0700H</pre></td></tr><tr><td data-num="21"></td><td><pre>    mov cx<span class="token punctuation">,</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    mov dx<span class="token punctuation">,</span> 0184FH <span class="token punctuation">;</span> <span class="token number">25</span> x <span class="token number">80</span> resolution</pre></td></tr><tr><td data-num="23"></td><td><pre>    int 10H</pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token punctuation">;</span> Display on screen<span class="token operator">:</span> Start booting <span class="token operator">...</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">AH</span> <span class="token operator">=</span> 13H</pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">AL</span> <span class="token operator">=</span> <span class="token number">01</span> move the cursor to the end <span class="token keyword">of</span> string</pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">BH</span> <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">BL</span> <span class="token operator">=</span> 0FH Highlighted white color</pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">CX</span> <span class="token operator">=</span> lenth <span class="token keyword">of</span> the string</pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DH</span> <span class="token operator">=</span> start row number</pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DL</span> <span class="token operator">=</span> start column number</pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">ES</span><span class="token operator">:</span><span class="token constant">BP</span> <span class="token operator">=</span> address <span class="token keyword">of</span> the string</pre></td></tr><tr><td data-num="34"></td><td><pre>    mov ax<span class="token punctuation">,</span> 1301H</pre></td></tr><tr><td data-num="35"></td><td><pre>    mov bx<span class="token punctuation">,</span> 000FH</pre></td></tr><tr><td data-num="36"></td><td><pre>    mov cx<span class="token punctuation">,</span> 0014H</pre></td></tr><tr><td data-num="37"></td><td><pre>    mov dx<span class="token punctuation">,</span> 0000H</pre></td></tr><tr><td data-num="38"></td><td><pre>    push ax</pre></td></tr><tr><td data-num="39"></td><td><pre>    mov ax<span class="token punctuation">,</span> ds</pre></td></tr><tr><td data-num="40"></td><td><pre>    mov es<span class="token punctuation">,</span> ax</pre></td></tr><tr><td data-num="41"></td><td><pre>    pop ax</pre></td></tr><tr><td data-num="42"></td><td><pre>    mov bp<span class="token punctuation">,</span> booting_message</pre></td></tr><tr><td data-num="43"></td><td><pre>    int 10H</pre></td></tr><tr><td data-num="44"></td><td><pre></pre></td></tr><tr><td data-num="45"></td><td><pre>    <span class="token punctuation">;</span> Reset floppy</pre></td></tr><tr><td data-num="46"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DL</span> <span class="token operator">=</span> 00H floopy disk</pre></td></tr><tr><td data-num="47"></td><td><pre>    <span class="token punctuation">;</span> <span class="token constant">DL</span> <span class="token operator">=</span> 80H hard disk</pre></td></tr><tr><td data-num="48"></td><td><pre>    xor ah<span class="token punctuation">,</span> ah</pre></td></tr><tr><td data-num="49"></td><td><pre>    xor dl<span class="token punctuation">,</span> dl</pre></td></tr><tr><td data-num="50"></td><td><pre>    int 13H</pre></td></tr><tr><td data-num="51"></td><td><pre>    </pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token punctuation">;</span> Hanging the system</pre></td></tr><tr><td data-num="53"></td><td><pre>    jmp $</pre></td></tr><tr><td data-num="54"></td><td><pre></pre></td></tr><tr><td data-num="55"></td><td><pre>booting_message     db <span class="token string">'Hello, Cloud, Kernel World!'</span></pre></td></tr><tr><td data-num="56"></td><td><pre>times <span class="token number">510</span> <span class="token operator">-</span> <span class="token punctuation">(</span>$ <span class="token operator">-</span> $$<span class="token punctuation">)</span> db <span class="token number">0</span></pre></td></tr><tr><td data-num="57"></td><td><pre>dw <span class="token number">0xAA55</span></pre></td></tr></table></figure><h3 id="step2-创建一个软盘镜像作为启动盘"><a class="anchor" href="#step2-创建一个软盘镜像作为启动盘">#</a> step2. 创建一个软盘镜像作为启动盘</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>bximage  // 执行bximage命令</pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span></pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre>                                bximage</pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre>  Disk Image Creation / Conversion / Resize and Commit Tool <span class="token keyword">for</span> Bochs</pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre>         <span class="token variable">$Id</span><span class="token builtin class-name">:</span> bximage.cc <span class="token number">13481</span> <span class="token number">2018</span>-03-30 <span class="token number">21</span>:04:04Z vruppert $</pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token number">1</span>. Create new floppy or hard disk image</pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre><span class="token number">2</span>. Convert hard disk image to other <span class="token function">format</span> <span class="token punctuation">(</span>mode<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre><span class="token number">3</span>. Resize hard disk image</pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre><span class="token number">4</span>. Commit <span class="token string">'undoable'</span> redolog to base image</pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre><span class="token number">5</span>. Disk image info</pre></td></tr><tr><td data-num="13"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td data-command=""></td><td><pre><span class="token number">0</span>. Quit</pre></td></tr><tr><td data-num="15"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td data-command=""></td><td><pre>Please choose one <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token number">1</span>  <span class="token comment"># step 1. 选择 [1]. 表示创建镜像</span></pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td data-command=""></td><td><pre>Create image</pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td data-command=""></td><td><pre>Do you want to create a floppy disk image or a hard disk image?</pre></td></tr><tr><td data-num="21"></td><td data-command=""></td><td><pre>Please <span class="token builtin class-name">type</span> hd or fd. <span class="token punctuation">[</span>hd<span class="token punctuation">]</span> fd   <span class="token comment">#  step 2. 选择 fd. 表示创建软盘镜像</span></pre></td></tr><tr><td data-num="22"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td data-command=""></td><td><pre>Choose the size of floppy disk image to create.</pre></td></tr><tr><td data-num="24"></td><td data-command=""></td><td><pre>Please <span class="token builtin class-name">type</span> 160k, 180k, 320k, 360k, 720k, <span class="token number">1</span>.2M, <span class="token number">1</span>.44M, <span class="token number">1</span>.68M, <span class="token number">1</span>.72M, or <span class="token number">2</span>.88M.</pre></td></tr><tr><td data-num="25"></td><td data-command=""></td><td><pre> <span class="token punctuation">[</span><span class="token number">1</span>.44M<span class="token punctuation">]</span>         <span class="token comment"># 默认软盘大小为 1.44M</span></pre></td></tr><tr><td data-num="26"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td data-command=""></td><td><pre>What should be the name of the image?</pre></td></tr><tr><td data-num="28"></td><td data-command=""></td><td><pre><span class="token punctuation">[</span>a.img<span class="token punctuation">]</span> boot.img  <span class="token comment"># step 3. 软盘镜像名称</span></pre></td></tr><tr><td data-num="29"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td data-command=""></td><td><pre>Creating floppy image <span class="token string">'boot.img'</span> with <span class="token number">2880</span> sectors</pre></td></tr><tr><td data-num="31"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="32"></td><td data-command=""></td><td><pre>The following line should appear <span class="token keyword">in</span> your bochsrc:</pre></td></tr><tr><td data-num="33"></td><td data-command=""></td><td><pre>  floppya: <span class="token assign-left variable">image</span><span class="token operator">=</span><span class="token string">"boot.img"</span>, <span class="token assign-left variable">status</span><span class="token operator">=</span>inserted <span class="token comment"># 这里是提示如何把生成的镜像插入到虚拟机里</span></pre></td></tr></table></figure><h3 id="step3-将二进制镜像写入到boot-image的第一个扇区"><a class="anchor" href="#step3-将二进制镜像写入到boot-image的第一个扇区">#</a> step3. 将二进制镜像写入到 boot image 的第一个扇区</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token function">dd</span> <span class="token assign-left variable">if</span><span class="token operator">=</span>boot.bin <span class="token assign-left variable">of</span><span class="token operator">=</span>boot.img <span class="token assign-left variable">bs</span><span class="token operator">=</span><span class="token number">512</span> <span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token number">1</span> <span class="token assign-left variable">conv</span><span class="token operator">=</span>notrunc</pre></td></tr></table></figure><h3 id="step4-执行bochs"><a class="anchor" href="#step4-执行bochs">#</a> step4. 执行 bochs</h3>
+<blockquote>
+<p>直接执行 bochs</p>
+</blockquote>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>bochs</pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span></pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre>                        Bochs x86 Emulator <span class="token number">2.7</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre>              Built from SVN snapshot on August  <span class="token number">1</span>, <span class="token number">2021</span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre>                Timestamp: Sun Aug  <span class="token number">1</span> <span class="token number">10</span>:07:00 CEST <span class="token number">2021</span></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre>00000000000i<span class="token punctuation">[</span>      <span class="token punctuation">]</span> BXSHARE not set. using compile <span class="token function">time</span> default <span class="token string">'/usr/local/share/bochs'</span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre>00000000000i<span class="token punctuation">[</span>      <span class="token punctuation">]</span> reading configuration from .bochsrc</pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre>------------------------------</pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre>Bochs Configuration: Main Menu</pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre>------------------------------</pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td data-command=""></td><td><pre>This is the Bochs Configuration Interface, where you can describe the</pre></td></tr><tr><td data-num="14"></td><td data-command=""></td><td><pre>machine that you want to simulate.  Bochs has already searched <span class="token keyword">for</span> a</pre></td></tr><tr><td data-num="15"></td><td data-command=""></td><td><pre>configuration <span class="token function">file</span> <span class="token punctuation">(</span>typically called bochsrc.txt<span class="token punctuation">)</span> and loaded it <span class="token keyword">if</span> it</pre></td></tr><tr><td data-num="16"></td><td data-command=""></td><td><pre>could be found.  When you are satisfied with the configuration, go</pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre>ahead and start the simulation.</pre></td></tr><tr><td data-num="18"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre>You can also start bochs with the -q option to skip these menus.</pre></td></tr><tr><td data-num="20"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td data-command=""></td><td><pre><span class="token number">1</span>. Restore factory default configuration</pre></td></tr><tr><td data-num="22"></td><td data-command=""></td><td><pre><span class="token number">2</span>. Read options from<span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="23"></td><td data-command=""></td><td><pre><span class="token number">3</span>. Edit options</pre></td></tr><tr><td data-num="24"></td><td data-command=""></td><td><pre><span class="token number">4</span>. Save options to<span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="25"></td><td data-command=""></td><td><pre><span class="token number">5</span>. Restore the Bochs state from<span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="26"></td><td data-command=""></td><td><pre><span class="token number">6</span>. Begin simulation</pre></td></tr><tr><td data-num="27"></td><td data-command=""></td><td><pre><span class="token number">7</span>. Quit now</pre></td></tr><tr><td data-num="28"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="29"></td><td data-command=""></td><td><pre>Please choose one: <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token number">6</span> <span class="token comment">#当输入【6】后，开始了模拟工作</span></pre></td></tr></table></figure><p>此时如果你设置的是调试模式的话，cpu 会自动进入调试状态，并且停在命令行上等待输入指令<br />
+ BIOS 会把引导扇区的代码加载到物理地址的 0X7C00 并且执行<br />
+我们来验证一下</p>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token operator">&lt;</span>bochs:<span class="token operator"><span class="token file-descriptor important">1</span>></span> pb 0x7C00    <span class="token comment"># pb 代表 physical break (物理断点)</span></pre></td></tr><tr><td data-num="2"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token operator">&lt;</span>bochs:<span class="token operator"><span class="token file-descriptor important">2</span>></span> c            <span class="token comment"># c 表示 continue (继续)</span></pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> Breakpoint <span class="token number">1</span>, 0x00007c00 <span class="token keyword">in</span> ?? <span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre>Next at <span class="token assign-left variable">t</span><span class="token operator">=</span><span class="token number">1955072</span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">[</span>0x000000007c00<span class="token punctuation">]</span> 0000:7c00 <span class="token punctuation">(</span>unk. ctxt<span class="token punctuation">)</span>: mov ax, cs        <span class="token punctuation">;</span> 8cc8</pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token operator">&lt;</span>bochs:<span class="token operator"><span class="token file-descriptor important">3</span>></span>  n          <span class="token comment"># n 表示单步执行</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre>Next at <span class="token assign-left variable">t</span><span class="token operator">=</span><span class="token number">1955073</span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">[</span>0x000000007c02<span class="token punctuation">]</span> 0000:7c02 <span class="token punctuation">(</span>unk. ctxt<span class="token punctuation">)</span>: mov ds, ax                <span class="token punctuation">;</span> 8ed8</pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre><span class="token operator">&lt;</span>bochs:<span class="token operator"><span class="token file-descriptor important">4</span>></span>  u  0x7c3e 0x7c7e     <span class="token comment"># 除了使用 n 命令单步执行外，还是可以返回编译端内存</span></pre></td></tr></table></figure><p><img data-src="../../../images/osmenu.png" alt="&quot;输出结果&quot;" title="输出结果" height="400" width="600" /><br />
+ 完成以上步骤恭喜你，你的第一个 <code>Hello, Cloud, Kernel World!</code>  就在操作系统中打出来啦。！！！</p>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>os</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>os</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Markdown Style test</title>
+    <url>/xz.github.io/markdown/</url>
+    <content><![CDATA[<p>This post is originated from <span class="exturl" data-url="aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vYXBhY2tlZXIvNDE1OTI2OA==">here</span> and is used for testing markdown style. This post contains nearly every markdown usage. Make sure all the markdown elements below show up correctly.</p>
+<span id="more"></span>
+<hr />
+<h2 id="headers"><a class="anchor" href="#headers">#</a> Headers</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token title important"><span class="token punctuation">#</span> H1</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token title important"><span class="token punctuation">##</span> H2</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token title important"><span class="token punctuation">###</span> H3</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token title important"><span class="token punctuation">####</span> H4</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token title important"><span class="token punctuation">#####</span> H5</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token title important"><span class="token punctuation">######</span> H6</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>Alternatively, for H1 and H2, an underline-ish style:</pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token title important">Alt-H1</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">======</span></span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token title important">Alt-H2</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token punctuation">------</span></span></pre></td></tr></table></figure><h1 id="h1"><a class="anchor" href="#h1">#</a> H1</h1>
+<h2 id="h2"><a class="anchor" href="#h2">#</a> H2</h2>
+<h3 id="h3"><a class="anchor" href="#h3">#</a> H3</h3>
+<h4 id="h4"><a class="anchor" href="#h4">#</a> H4</h4>
+<h5 id="h5"><a class="anchor" href="#h5">#</a> H5</h5>
+<h6 id="h6"><a class="anchor" href="#h6">#</a> H6</h6>
+<p>Alternatively, for H1 and H2, an underline-ish style:</p>
+<h1 id="alt-h1"><a class="anchor" href="#alt-h1">#</a> Alt-H1</h1>
+<h2 id="alt-h2"><a class="anchor" href="#alt-h2">#</a> Alt-H2</h2>
+<h2 id="emphasis"><a class="anchor" href="#emphasis">#</a> Emphasis</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre>Emphasis, aka italics, with <span class="token italic"><span class="token punctuation">*</span><span class="token content">asterisks</span><span class="token punctuation">*</span></span> or <span class="token italic"><span class="token punctuation">_</span><span class="token content">underscores</span><span class="token punctuation">_</span></span>.</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>Strong emphasis, aka bold, with <span class="token bold"><span class="token punctuation">**</span><span class="token content">asterisks</span><span class="token punctuation">**</span></span> or <span class="token bold"><span class="token punctuation">__</span><span class="token content">underscores</span><span class="token punctuation">__</span></span>.</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>Combined emphasis with <span class="token bold"><span class="token punctuation">**</span><span class="token content">asterisks and <span class="token italic"><span class="token punctuation">_</span><span class="token content">underscores</span><span class="token punctuation">_</span></span></span><span class="token punctuation">**</span></span>.</pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>Strikethrough uses two tildes. <span class="token strike"><span class="token punctuation">~~</span><span class="token content">Scratch this.</span><span class="token punctuation">~~</span></span></pre></td></tr></table></figure><p>Emphasis, aka italics, with <em>asterisks</em> or <em>underscores</em>.</p>
+<p>Strong emphasis, aka bold, with <strong>asterisks</strong> or <strong>underscores</strong>.</p>
+<p>Combined emphasis with <strong>asterisks and <em>underscores</em></strong>.</p>
+<p>Strikethrough uses two tildes. <s>Scratch this.</s></p>
+<h2 id="lists"><a class="anchor" href="#lists">#</a> Lists</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token list punctuation">1.</span> First ordered list item</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token list punctuation">2.</span> Another item</pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token list punctuation">*</span> Unordered sub-list.</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token list punctuation">1.</span> Actual numbers don't matter, just that it's a number</pre></td></tr><tr><td data-num="5"></td><td><pre>  <span class="token list punctuation">1.</span> Ordered sub-list</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token list punctuation">4.</span> And another item.</pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>   You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).</pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>   To have a line break without a paragraph, you will need to use two trailing spaces.  </pre></td></tr><tr><td data-num="11"></td><td><pre>   Note that this line is separate, but within the same paragraph.  </pre></td></tr><tr><td data-num="12"></td><td><pre>   (This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token list punctuation">*</span> Unordered list can use asterisks</pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token list punctuation">-</span> Or minuses</pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token list punctuation">+</span> Or pluses</pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token list punctuation">-</span> Paragraph In unordered list</pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre>  For example like this.</pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>Common Paragraph with some text.</pre></td></tr><tr><td data-num="22"></td><td><pre>And more text.</pre></td></tr></table></figure><ol>
+<li>First ordered list item</li>
+<li>Another item</li>
+</ol>
+<ul>
+<li>Unordered sub-list.</li>
+</ul>
+<ol>
+<li>
+<p>Actual numbers don't matter, just that it's a number</p>
+</li>
+<li>
+<p>Ordered sub-list</p>
+</li>
+<li>
+<p>And another item.</p>
+<p>You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).</p>
+<p>To have a line break without a paragraph, you will need to use two trailing spaces.<br />
+Note that this line is separate, but within the same paragraph.<br />
+(This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)</p>
+</li>
+</ol>
+<ul>
+<li>Unordered list can use asterisks</li>
+</ul>
+<ul>
+<li>Or minuses</li>
+</ul>
+<ul>
+<li>Or pluses</li>
+</ul>
+<ul>
+<li>
+<p>Paragraph In unordered list</p>
+<p>For example like this.</p>
+</li>
+</ul>
+<p>Common Paragraph with some text.<br />
+And more text.</p>
+<h2 id="inline-html"><a class="anchor" href="#inline-html">#</a> Inline HTML</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>To reboot your computer, press <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kbd</span><span class="token punctuation">></span></span>ctrl<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kbd</span><span class="token punctuation">></span></span>+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kbd</span><span class="token punctuation">></span></span>alt<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kbd</span><span class="token punctuation">></span></span>+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kbd</span><span class="token punctuation">></span></span>del<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kbd</span><span class="token punctuation">></span></span>.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>To reboot your computer, press <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.</p>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dl</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dt</span><span class="token punctuation">></span></span>Definition list<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dt</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dd</span><span class="token punctuation">></span></span>Is something people use sometimes.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dd</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token code keyword">    &lt;dt>Markdown in HTML&lt;/dt></pre></td></tr><tr><td data-num="6"></td><td><pre>    &lt;dd>Does *not* work **very** well. Use HTML &lt;em>tags&lt;/em>.&lt;/dd></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dl</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><dl>
+    <dt>Definition list</dt>
+    <dd>Is something people use sometimes.</dd>
+<pre><code>&lt;dt&gt;Markdown in HTML&lt;/dt&gt;
+&lt;dd&gt;Does *not* work **very** well. Use HTML &lt;em&gt;tags&lt;/em&gt;.&lt;/dd&gt;
+</code></pre>
+</dl>
+<h2 id="links"><a class="anchor" href="#links">#</a> Links</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token url">[<span class="token content">I'm an inline-style link</span>](<span class="token url">https://www.google.com</span>)</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token url">[<span class="token content">I'm an inline-style link with title</span>](<span class="token url">https://www.google.com</span> <span class="token string">"Google's Homepage"</span>)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token url">[<span class="token content">I'm a reference-style link</span>][<span class="token variable">Arbitrary case-insensitive reference text</span>]</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token url">[<span class="token content">I'm a relative reference to a repository file</span>](<span class="token url">../blob/master/LICENSE</span>)</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token url">[<span class="token content">You can use numbers for reference-style link definitions</span>][<span class="token variable">1</span>]</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>Or leave it empty and use the [link text itself]</pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre>Some text to show that the reference links can follow later.</pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">arbitrary case-insensitive reference text</span><span class="token punctuation">]</span><span class="token punctuation">:</span> https://hexo.io</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span> https://hexo.io/docs/</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">link text itself</span><span class="token punctuation">]</span><span class="token punctuation">:</span> https://hexo.io/api/</span></pre></td></tr></table></figure><p><span class="exturl" data-url="aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbQ==">I'm an inline-style link</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbQ==">I'm an inline-style link with title</span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">I'm a reference-style link</span></p>
+<p><a href="../blob/master/LICENSE">I'm a relative reference to a repository file</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvL2RvY3Mv">You can use numbers for reference-style link definitions</span></p>
+<p>Or leave it empty and use the <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvL2FwaS8=">link text itself</span></p>
+<p>Some text to show that the reference links can follow later.</p>
+<h2 id="images"><a class="anchor" href="#images">#</a> Images</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre>hover to see the title text:</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>Inline-style:</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token url"><span class="token operator">!</span>[<span class="token content">alt text</span>](<span class="token url">https://hexo.io/icon/favicon-196x196.png</span> <span class="token string">"Logo Title Text 1"</span>)</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>Reference-style:</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token url"><span class="token operator">!</span>[<span class="token content">alt text</span>][<span class="token variable">logo</span>]</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">logo</span><span class="token punctuation">]</span><span class="token punctuation">:</span> https://hexo.io/icon/favicon-196x196.png <span class="token string">"Logo Title Text 2"</span></span></pre></td></tr></table></figure><p>hover to see the title text:</p>
+<p>Inline-style:</p>
+<p><img data-src="https://hexo.io/icon/favicon-196x196.png" alt="alt text" title="Logo Title Text 1" /></p>
+<p>Reference-style:<br />
+<img data-src="https://hexo.io/icon/favicon-196x196.png" alt="alt text" title="Logo Title Text 2" /></p>
+<h2 id="code-and-syntax-highlighting"><a class="anchor" href="#code-and-syntax-highlighting">#</a> Code and Syntax Highlighting</h2>
+<p>Inline  <code>code</code>  has  <code>back-ticks around</code>  it.</p>
+<figure class="highlight javascript"><figcaption data-lang="javascript"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">var</span> s <span class="token operator">=</span> <span class="token string">"JavaScript syntax highlighting"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">alert</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr></table></figure><figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>s <span class="token operator">=</span> <span class="token string">"Python syntax highlighting"</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">print</span> s</pre></td></tr></table></figure><pre><code>No language indicated, so no syntax highlighting.
+But let's throw in a &lt;b&gt;tag&lt;/b&gt;.
+</code></pre>
+<h2 id="tables"><a class="anchor" href="#tables">#</a> Tables</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token table"><span class="token table-header-row"><span class="token punctuation">|</span><span class="token table-header important">                </span><span class="token punctuation">|</span><span class="token table-header important">ASCII                          </span><span class="token punctuation">|</span><span class="token table-header important">HTML                         </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="2"></td><td><pre></span><span class="token table-line"><span class="token punctuation">|</span><span class="token punctuation">----------------</span><span class="token punctuation">|</span><span class="token punctuation">-------------------------------</span><span class="token punctuation">|</span><span class="token punctuation">-----------------------------</span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="3"></td><td><pre></span><span class="token table-data-rows"><span class="token punctuation">|</span><span class="token table-data">Single backticks</span><span class="token punctuation">|</span><span class="token table-data"><span class="token code-snippet code keyword">`'Isn't this fun?'`</span>            </span><span class="token punctuation">|</span><span class="token table-data">'Isn't this fun?'            </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">|</span><span class="token table-data">Quotes          </span><span class="token punctuation">|</span><span class="token table-data"><span class="token code-snippet code keyword">`"Isn't this fun?"`</span>            </span><span class="token punctuation">|</span><span class="token table-data">"Isn't this fun?"            </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">|</span><span class="token table-data">Dashes          </span><span class="token punctuation">|</span><span class="token table-data"><span class="token code-snippet code keyword">`-- is en-dash, --- is em-dash`</span></span><span class="token punctuation">|</span><span class="token table-data">-- is en-dash, --- is em-dash</span><span class="token punctuation">|</span></span></span></pre></td></tr></table></figure><table>
+<thead>
+<tr>
+<th></th>
+<th>ASCII</th>
+<th>HTML</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single backticks</td>
+<td><code>'Isn't this fun?'</code></td>
+<td>'Isn't this fun?'</td>
+</tr>
+<tr>
+<td>Quotes</td>
+<td><code>&quot;Isn't this fun?&quot;</code></td>
+<td>&quot;Isn't this fun?&quot;</td>
+</tr>
+<tr>
+<td>Dashes</td>
+<td><code>-- is en-dash, --- is em-dash</code></td>
+<td>-- is en-dash, --- is em-dash</td>
+</tr>
+</tbody>
+</table>
+<p>Colons can be used to align columns.</p>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token table"><span class="token table-header-row"><span class="token punctuation">|</span><span class="token table-header important"> Tables        </span><span class="token punctuation">|</span><span class="token table-header important"> Are           </span><span class="token punctuation">|</span><span class="token table-header important"> Cool  </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="2"></td><td><pre></span><span class="token table-line"><span class="token punctuation">|</span> <span class="token punctuation">-------------</span> <span class="token punctuation">|</span><span class="token punctuation">:-------------:</span><span class="token punctuation">|</span> <span class="token punctuation">-----:</span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="3"></td><td><pre></span><span class="token table-data-rows"><span class="token punctuation">|</span><span class="token table-data"> col 3 is      </span><span class="token punctuation">|</span><span class="token table-data"> right-aligned </span><span class="token punctuation">|</span><span class="token table-data">  </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">|</span><span class="token table-data"> col 2 is      </span><span class="token punctuation">|</span><span class="token table-data"> centered      </span><span class="token punctuation">|</span><span class="token table-data">    </span><span class="token punctuation">|</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">|</span><span class="token table-data"> zebra stripes </span><span class="token punctuation">|</span><span class="token table-data"> are neat      </span><span class="token punctuation">|</span></span></span></pre></td></tr></table></figure><table>
+<thead>
+<tr>
+<th>Tables</th>
+<th style="text-align:center">Are</th>
+<th style="text-align:right">Cool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>col 3 is</td>
+<td style="text-align:center">right-aligned</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>col 2 is</td>
+<td style="text-align:center">centered</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>zebra stripes</td>
+<td style="text-align:center">are neat</td>
+<td style="text-align:right"></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td>The outer pipes (</td>
+<td style="text-align:center">) are optional, and you don't need to make the raw Markdown line up prettily. You can also use inline Markdown.</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token table"><span class="token table-header-row"><span class="token table-header important">Markdown </span><span class="token punctuation">|</span><span class="token table-header important"> Less </span><span class="token punctuation">|</span><span class="token table-header important"> Pretty</span></pre></td></tr><tr><td data-num="2"></td><td><pre></span><span class="token table-line"><span class="token punctuation">---</span> <span class="token punctuation">|</span> <span class="token punctuation">---</span> <span class="token punctuation">|</span> <span class="token punctuation">---</span></pre></td></tr><tr><td data-num="3"></td><td><pre></span><span class="token table-data-rows"><span class="token table-data"><span class="token italic"><span class="token punctuation">*</span><span class="token content">Still</span><span class="token punctuation">*</span></span> </span><span class="token punctuation">|</span><span class="token table-data"> <span class="token code-snippet code keyword">`renders`</span> </span><span class="token punctuation">|</span><span class="token table-data"> <span class="token bold"><span class="token punctuation">**</span><span class="token content">nicely</span><span class="token punctuation">**</span></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token table-data">1 </span><span class="token punctuation">|</span><span class="token table-data"> 2 </span><span class="token punctuation">|</span><span class="token table-data"> 3</span></span></span></pre></td></tr></table></figure><table>
+<thead>
+<tr>
+<th>Markdown</th>
+<th>Less</th>
+<th>Pretty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Still</em></td>
+<td><code>renders</code></td>
+<td><strong>nicely</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>You can find more information about <strong>LaTeX</strong> mathematical expressions <span class="exturl" data-url="aHR0cHM6Ly9tYXRoLm1ldGEuc3RhY2tleGNoYW5nZS5jb20vcXVlc3Rpb25zLzUwMjAvbWF0aGpheC1iYXNpYy10dXRvcmlhbC1hbmQtcXVpY2stcmVmZXJlbmNl">here</span>.</p>
+</blockquote>
+<h2 id="blockquotes"><a class="anchor" href="#blockquotes">#</a> Blockquotes</h2>
+<blockquote>
+<p>Blockquotes are very handy in email to emulate reply text.<br />
+This line is part of the same quote.</p>
+</blockquote>
+<p>Quote break.</p>
+<blockquote>
+<p>This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can <em>put</em> <strong>Markdown</strong> into a blockquote.</p>
+</blockquote>
+<h2 id="horizontal-rule"><a class="anchor" href="#horizontal-rule">#</a> Horizontal Rule</h2>
+<p>Three or more...</p>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token hr punctuation">---</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>Hyphens</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token hr punctuation">***</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>Asterisks</pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>___</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>Underscores</pre></td></tr></table></figure><hr />
+<p>Hyphens</p>
+<hr />
+<p>Asterisks</p>
+<hr />
+<p>Underscores</p>
+<h2 id="line-breaks"><a class="anchor" href="#line-breaks">#</a> Line Breaks</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre>Here's a line for us to start with.</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>This line is separated from the one above by two newlines, so it will be a <span class="token italic"><span class="token punctuation">*</span><span class="token content">separate paragraph</span><span class="token punctuation">*</span></span>.</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>This line is also a separate paragraph, but...</pre></td></tr><tr><td data-num="6"></td><td><pre>This line is only separated by a single newline, so it's a separate line in the <span class="token italic"><span class="token punctuation">*</span><span class="token content">same paragraph</span><span class="token punctuation">*</span></span>.</pre></td></tr></table></figure><p>Here's a line for us to start with.</p>
+<p>This line is separated from the one above by two newlines, so it will be a <em>separate paragraph</em>.</p>
+<p>This line is also a separate paragraph, but...<br />
+This line is only separated by a single newline, so it's a separate line in the <em>same paragraph</em>.</p>
+<hr />
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre>This is a regular paragraph.</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>table</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span><span class="token punctuation">></span></span>Foo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>table</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>This is another regular paragraph.</pre></td></tr></table></figure><p>This is a regular paragraph.</p>
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+<p>This is another regular paragraph.</p>
+<h2 id="youtube-videos"><a class="anchor" href="#youtube-videos">#</a> Youtube videos</h2>
+<figure class="highlight markdown"><figcaption data-lang="markdown"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://www.youtube.com/watch?feature=player_embedded&amp;v=ARted4RniaU</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">"</span></span> <span class="token attr-name">target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_blank<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://img.youtube.com/vi/ARted4RniaU/0.jpg<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token attr-name">alt</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>IMAGE ALT TEXT HERE<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>240<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>180<span class="token punctuation">"</span></span> <span class="token attr-name">border</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>Pure markdown version:</pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token url">[<span class="token content">![IMAGE ALT TEXT HERE</span>](<span class="token url">https://img.youtube.com/vi/ARted4RniaU/0.jpg</span>)</span>](https://www.youtube.com/watch?v=ARted4RniaU)</pre></td></tr></table></figure><p><a href="https://www.youtube.com/watch?feature=player_embedded&v=ARted4RniaU
+" target="_blank"><img data-src="https://img.youtube.com/vi/ARted4RniaU/0.jpg"
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a></p>
+<p>Pure markdown version:</p>
+<p><a href="https://www.youtube.com/watch?v=ARted4RniaU"><img data-src="https://img.youtube.com/vi/ARted4RniaU/0.jpg" alt="IMAGE ALT TEXT HERE" /></a></p>
+]]></content>
+      <tags>
+        <tag>Foo</tag>
+        <tag>Bar</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统基础</title>
+    <url>/xz.github.io/computer-science/os/os_base/</url>
+    <content><![CDATA[<h1 id="操作系统系统概述"><a class="anchor" href="#操作系统系统概述">#</a> 操作系统系统概述</h1>
+<h2 id="基本概念"><a class="anchor" href="#基本概念">#</a> 基本概念</h2>
+<h3 id="概念"><a class="anchor" href="#概念">#</a> 概念</h3>
+<p><code>操作系统</code>  (Operating System, OS) 是指控制和管理整个计算机系统的硬件和软件资源，并合理地组织调度计算机的工作和资源的分配，以提供给用户和其他软件方便的接口和环境，它是计算机系统中最基本的系统软件。</p>
+<blockquote>
+<p>补充知识：进程是一个程序的执行过程，执行前<strong>需要将该程序放到内存中</strong>，才能被 CPU 处理</p>
+</blockquote>
+<h3 id="脑图梳理"><a class="anchor" href="#脑图梳理">#</a> 脑图梳理</h3>
+<p><img data-src="../../../images/os_concept.png" alt="&quot;OS概念&quot;" title="OS概念梳理" height="400" width="600" /></p>
+<p><code>操作系统</code> 作为系统资源的管理者， <code>操作系统</code> 提供以下的功能</p>
+<blockquote>
+<ol>
+<li>处理机管理</li>
+<li>存储器管理</li>
+<li>文件管理</li>
+<li>设备管理</li>
+</ol>
+</blockquote>
+<p><code>操作系统</code> 作为用户和计算机硬件间的接口， <code>操作系统</code> 提供以下的功能</p>
+<blockquote>
+<ol>
+<li>命令接口：允许用户<strong>直接使用</strong>。(分为: 【联机命令 = 交互式命令接口】和【脱机命令接口 = 批处理命令接口】)</li>
+<li>程序接口：允许用户通过程序<strong>间接使用</strong>，由一组 <code>系统调用</code> 组成      1 和 2 统称为 <code>用户接口</code></li>
+<li>GUI (图形用户界面)</li>
+</ol>
+</blockquote>
+<div class="note info">
+<p>系统调用 = 系统调用命令 = 广义指令</p>
+</div>
+<h3 id="特征"><a class="anchor" href="#特征">#</a> 特征</h3>
+<blockquote>
+<ol>
+<li>并发</li>
+<li>共享</li>
+<li>虚拟</li>
+<li>异步<br />
+<strong>并发和共享是两个最基本的特征，二者互为存在条件</strong></li>
+</ol>
+</blockquote>
+<p><strong>并发</strong>：指两个或多个事件在同一时间间隔内发生。这些事件宏观上是同时发生的，微观上是交替发生的。<br />
+易混淆概念 ---- 并行：指两个或多个事件在同一时刻同时发生</p>
+<p>一个单核处理机 (CPU) 同一时刻只能执行一个程序，因此操作系统会负责协调多个程序交替执行</p>
+<p><strong>共享</strong>：即资源共享，是指系统中的资源可供内存中多个并发执行的进程共同使用。<br />
+两种资源共享方式:</p>
+<blockquote>
+<ol>
+<li>互斥共享方式 (如，对摄像头设备的共享使用)</li>
+<li>同时共享方式 (如，对硬盘资源的共享使用)</li>
+</ol>
+</blockquote>
+<p><strong>虚拟</strong>：是指把一个物理上的实体变为若干个逻辑上的对应物。物理实体是实际存在的，而逻辑上对应物是用户感受到的。<br />
+虚拟技术分为 2 种</p>
+<blockquote>
+<ol>
+<li>空分复用技术 (如虚拟存储器技术)</li>
+<li>时分复用技术 (如虚拟处理器)<br />
+ 显然，如果失去了并发性，虚拟性也就没存在的意义了。</li>
+</ol>
+</blockquote>
+<p><strong>异步</strong>：是指在多道程序环境下，允许多个程序并发执行，但由于资源有限，进程的执行不是一贯到底的，而是走走停停，以不可预知的速度向前推进，这就是程序的异步性。<br />
+显然，如果失去了并发性，则系统只能串形地处理每个进程，如果失去了并发性，则没有异步性了。</p>
+<h2 id="操作系统的体系结构"><a class="anchor" href="#操作系统的体系结构">#</a> 操作系统的体系结构</h2>
+<p>OS 的运行机制和体系结构脑图<br />
+<img data-src="../../../images/os_structure.png" alt="&quot;OS的运行机制和体系结构&quot;" title="OS的运行机制和体系结构" height="600" width="600" /></p>
+<div class="note info">
+<p>什么是指令：简单来说，指令就是让处理器 (CPU) 能识别、执行的最基本命令</p>
+</div>
+<p>指令分为以下 2 类</p>
+<blockquote>
+<ol>
+<li>特权指令：如内存清零指令 【不允许用户程序使用】</li>
+<li>非特权指令：如普通的运算指令</li>
+</ol>
+</blockquote>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre>CPU如何判断当前是否可以执行特权指令？</pre></td></tr></table></figure><p>处理器状态主要分为以下两种:</p>
+<blockquote>
+<ol>
+<li>用户态（目态）     【此时 CPU 只能执行非特权指令】</li>
+<li>核心态（管态）     【特权指令、非特权指令都可以执行】<br />
+操作系统采用  <code>程序状态字(PSW)</code> <strong> 寄存器</strong>中的某标志位来标识当前处理器处于什么状态。0: 用户态，1: 核心态</li>
+</ol>
+</blockquote>
+<p>两种程序:</p>
+<blockquote>
+<ol>
+<li>内核程序 (运行在核心态)</li>
+<li>应用程序 (运行在用户态)</li>
+</ol>
+</blockquote>
+<p>操作系统内核 (大内核) 主要被划分为以下几块</p>
+<blockquote>
+<ol>
+<li>时钟管理：实现计时功能</li>
+<li>中断处理：负责实现中断机制</li>
+<li>源语： 是一种特殊的程序，处于 OS 最底层，是最接近硬件的部分。这种程序的运行具有原子性，运行时间较短、调用频繁。<br />
+以上是与硬件关联紧密的模块 (微内核)，还有一块是对系统资源进行管理的功能.(有点 OS 不把下面的内容归为 &quot;内核功能&quot;)</li>
+<li>系统控制的数据结构及处理<br />
+系统控制常见操作有以下 3 种
+<ol>
+<li>进程管理.  (进程状态管理、进程调度和分派、创建与撤销进程控制块等)</li>
+<li>存储器管理.(存储器的空间分配与回收、内存信息保护程序、代码对换程序等)</li>
+<li>设备管理.  (缓冲区管理，设备分配和回收等)</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<div class="note info">
+<p>系统中用来登记状态信息的数据结构有很多，如：作业控制块、进程控制块 (PCB)、设备控制块、各类链表、消息队列、缓冲区、空闲区登记表、内存分配表等。<br />
+特权指令、内核程序只能在核心态下运行</p>
+</div>
+<h2 id="中断"><a class="anchor" href="#中断">#</a> 中断</h2>
+<div class="note info">
+<p>用户态切换到核心态，是通过 <code>中断</code> 实现的。并且 <code>中断</code> 是唯一的途径<br />
+核心态切换到用户态，是通过执行一个 <code>特权指令</code> ，将 <code>程序状态字(PSW)</code>  的标志位设置为 “用户态”</p>
+</div>
+<blockquote>
+<ol>
+<li>当 <code>中断</code> 发生时，CPU 立即进入 <code>核心态</code> 。</li>
+<li>当 <code>中断</code> 发生后，当前运行的进程暂停运行，并由操作系统内核对 <code>中断</code> 进行处理。</li>
+<li>对于不同的 <code>中断</code> 信号，会进行不同的处理。</li>
+</ol>
+</blockquote>
+<h2 id="系统调用"><a class="anchor" href="#系统调用">#</a> 系统调用</h2>
+<p>应用程序通过 <code>系统调用</code> 请求 <code>操作系统</code> 的服务，这样可以保证系统的稳定性和安全性，防止用户进行非法操作。<br />
+ <code>系统调用</code> 按功能可以分为以下几类</p>
+<blockquote>
+<ol>
+<li>设备管理：完成设备的 请求 / 释放 / 启动 等功能</li>
+<li>文件管理：完成文件的 读 / 写 / 创建 / 删除 等功能</li>
+<li>进程控制：完成进程的 创建 / 撤销 / 阻塞 / 唤醒 等功能</li>
+<li>进程通信：完成进程间的 消息传递 / 信号传递 等功能</li>
+<li>内存管理：完成内存的 分配 / 回收 等功能<br />
+流程：<br />
+1. 传递系统调用参数 --&gt; 执行陷入指令 (用户态) --&gt; 执行系统调用相应服务程序 (核心态) --&gt; 返回用户程序<br />
+注意：</li>
+</ol>
+</blockquote>
+<ol>
+<li>陷入指令 (interrupt) 是在用户态执行的，执行陷入指令后会立刻引发一个内中断，从而 CPU 进入核心态</li>
+<li>发出系统调用请求是在用户态，而对系统调用的相应处理在核心态下进行</li>
+<li>陷入指令是唯一一个只能在用户态执行，而不可在核心态执行的指令</li>
+</ol>
+<h2 id="qa"><a class="anchor" href="#qa">#</a> Q&amp;A</h2>
+<ol>
+<li class="quiz">
+<p>用户可以通过 <span class="gap"></span> 两种方式来使用计算机</p>
+<ul class="options">
+<li>命令接口和函数</li>
+<li class="correct">命令接口和系统调用</li>
+<li>命令接口和文件管理</li>
+<li>设备管理方式和系统调用</li>
+</ul>
+<blockquote>
+<p>操作系统主要向用户提供命令接口和程序接口 (系统调用)，此外还提供图形接口。<br />
+当然，图形接口其实也是调用了系统调用而实现的功能</p>
+</blockquote>
+</li>
+<li class="quiz">
+<p>系统调用是由操作系统提供给用户的，它 <span class="gap"></span> 。</p>
+<ul class="options">
+<li>直接通过键盘交互方式使用</li>
+<li class="correct">只能通过用户程序间接使用</li>
+<li>是命令接口中的命令</li>
+<li>与系统的命令一样</li>
+</ul>
+</li>
+<li class="quiz">
+<p>操作系统与用户通信接口通常不包括 <span class="gap"></span> 。</p>
+<ul class="options">
+<li>shell</li>
+<li>命令解释器</li>
+<li>广义指令</li>
+<li class="correct">缓存管理指令</li>
+</ul>
+</li>
+<li class="quiz">
+<p>计算机开机后，操作系统最终被加载到 <span class="gap"></span> 。</p>
+<ul class="options">
+<li>BIOS</li>
+<li>ROM</li>
+<li>EPROM</li>
+<li class="correct">RAM</li>
+</ul>
+</li>
+</ol>
+<h1 id="进程管理"><a class="anchor" href="#进程管理">#</a> 进程管理</h1>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>os</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>os</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机组成原理</title>
+    <url>/xz.github.io/computer-science/os/computer_org/</url>
+    <content><![CDATA[<h1 id="第一章-计算机系统概述"><a class="anchor" href="#第一章-计算机系统概述">#</a> 第一章 计算机系统概述</h1>
+<div class="note info">
+<p>apple A13 制造工艺 7nm 指的是每个逻辑元件 (晶体管) 宽度不超过 7nm。其拥有 85 亿个晶体管</p>
+</div>
+<blockquote>
+<p>概念知识点:</p>
+<ol>
+<li>机器字长：计算机<strong>一次</strong>整数运算所能处理的二进制位数</li>
+</ol>
+</blockquote>
+<h2 id="计算机硬件组成"><a class="anchor" href="#计算机硬件组成">#</a> 计算机硬件组成</h2>
+<p>冯诺依曼计算机特点</p>
+<ol>
+<li>五大部件：输入设备、输出设备、存储器、运算器、控制器</li>
+<li>指令和数据以同等地位存在存储器中，可以按地址访问</li>
+<li>指令和数据用二进制表示</li>
+<li>指令由 <code>操作码</code> 和 <code>地址码</code> 组成</li>
+<li>存储程序</li>
+<li>以 <code>运算器</code> 为中心</li>
+</ol>
+<p>现代计算机特点</p>
+<ol>
+<li>以 <code>存储器</code> 为中心</li>
+<li>整合了  <code>运算器</code> 和 <code>控制器</code>  = CPU</li>
+<li>主机 = CPU +  <code>主存储器</code>  (内存)</li>
+</ol>
+<blockquote>
+<p>存储单元： 每个存储单元存放一串二进制代码<br />
+存储字 (word): 存储单元中二进制代码的组合<br />
+存储字长：存储单元中二进制代码的位数<br />
+存储元：即存储二进制的电子元件 (电容)，每个存储元可存储 1bit</p>
+</blockquote>
+<h3 id="主存储器的基本组成"><a class="anchor" href="#主存储器的基本组成">#</a> 主存储器的基本组成</h3>
+<p><img data-src="../../../images/cache_struct.png" alt="&quot;主存储器的基本组成&quot;" title="主存储器的基本组成" /><br />
+ 主存储器的工作方式是按存储单元的地址进行存取，这种存取方式称为按地址存取方式 (相联存储器是按内容访问的)<br />
+ 地址寄存器 MAR 存放访存地址，经过地址译码后找到所选的存储单元。<br />
+MAR 用于寻址，其位数对应着存储单元的个数。如 MAR 为 10 位，则有 2 的 10 次方 = 1024 个存储单元，记为 1K。<br />
+MAR 的长度与 PC (控制器中的程序计数器) 长度相等。<br />
+MDR 位数与存储字长相等，一般为字节的二次幂的整数倍。<br />
+虽然 MAR 和 MDR 是存储器的一部分，但现代 CPU 中却存在与 CPU 中，另外高速缓存 (Cache) 也存在与 CPU 中。</p>
+<h3 id="运算器的基本组成"><a class="anchor" href="#运算器的基本组成">#</a> 运算器的基本组成</h3>
+<p><img data-src="../../../images/accumulator_struct.png" alt="&quot;运算器的基本组成&quot;" title="运算器的基本组成" /><br />
+ 运算器内还有  <code>程序状态寄存器(PSW)</code> , 也称为标志寄存器，用于存放 ALU 运算得到的一些标志信息或处理机的状态信息。</p>
+<h3 id="控制器的基本组成"><a class="anchor" href="#控制器的基本组成">#</a> 控制器的基本组成</h3>
+<p><img data-src="../../../images/controller_struct.png" alt="&quot;控制器的基本组成&quot;" title="控制器的基本组成" /><br />
+ 取指令 (PC) 与分析指令 (IR) 可以统称为取指阶段<br />
+执行指令 (CU) 可以称为执行阶段<br />
+ PC 用来存放当前欲执行指令的地址，可以自动加 1 以形成下一条指令的地址，它与主存的 MAR 之间有一条直接通路。<br />
+IR 用来存放当前的指令，其内容来自主存的 MDR。<br />
+指令中的 <code>操作码</code>  OP (IR) 送至 CU， 用以分析指令并发出各种微操作命令序列<br />
+指令中的 <code>地址码</code>  Ad (IR) 送至 MAR，用以取操作数</p>
+<p>Cpu 和主存之间通过一组总线相连，总线中有地址、控制和数据 3 组信号线。<br />
+地址总线：MAR 中的地址信息会送到地址线上，用于指向读 / 写操作的主存存储单元；<br />
+控制线中有读 / 写信号线，指出数据是从 Cpu 写入主存，还是从主存读出到 Cpu。<br />
+根据是读操作 / 写操作来控制将 MDR 中的数据送到数据线上还是将数据线上的数据接收到 MDR 上。</p>
+<p>取数 a 到 ACC 的过程<br />
+<img data-src="../../../images/instruction_step.png" alt="&quot;Cpu执行指令过程&quot;" title="Cpu执行指令过程" /></p>
+<ol>
+<li>PC 指向第一条指令的存储地址 MAR</li>
+<li>MAR 去存储体中取指令 (操作码和地址码)</li>
+<li>指令取完后放在 MDR 寄存器中</li>
+<li>将指令取到 IR 中</li>
+<li>IR 取出指令的操作码，CU 分析指令</li>
+<li>获取 IR 中的地址码送到 MAR，MAR 解析数据地址后，MDR 从存储体中读取数据</li>
+<li>这时将数据发送到 ACC 去</li>
+</ol>
+<h3 id="cpu性能指标"><a class="anchor" href="#cpu性能指标">#</a> Cpu 性能指标</h3>
+<ol>
+<li>IPS (Instructions Per Second): 每秒执行多少条指令</li>
+<li>CPI (Clock cycle Per Instruction): 执行一条指令所需的时钟周期数</li>
+<li>Cpu 主频: Cpu 内数字脉冲信号振荡的频率</li>
+</ol>
+<p>IPS = 主频 / 平均 CPI</p>
+<h1 id="第二章-数据的表示和运算"><a class="anchor" href="#第二章-数据的表示和运算">#</a> 第二章 数据的表示和运算</h1>
+<blockquote>
+<p>为什么计算机采用二进制运算</p>
+<ol>
+<li>可使用两个稳定状态的物理器件表示</li>
+<li>0,1 正好对应逻辑值假、真。方便实现逻辑运算</li>
+<li>可以方便地使用逻辑门电路实现算术运算</li>
+</ol>
+</blockquote>
+<p>二进制 &lt;--&gt; 八进制、十六进制</p>
+<ol>
+<li>二进制 -&gt; 八进制【3 位一组，每组转换成对应的八进制符号】</li>
+<li>二进制 -&gt; 十六进制【4 位一组，每组转换成对应的十六进制符号】</li>
+<li>八进制 -&gt; 二进制 【每位八进制数转换成 3 位二进制】</li>
+<li>十六进制 -&gt; 二进制 【每位十六进制转换为 4 位二进制数】</li>
+</ol>
+<p>十进制 -&gt; 任意进制<br />
+<img data-src="../../../images/tentotwo1.png" alt="&quot;十进制转任意进制整数部分&quot;" title="十进制转任意进制整数部分" /><br />
+![&quot; 十进制转任意进制小数部分 &quot;](../../../images/tentotwo2.png&quot; 十进制转任意进制小数部分 &quot;<br />
+ 或者使用拼凑法</p>
+<p><img data-src="../../../images/jinzhi.png" alt="&quot;进位计数值归纳&quot;" title="进位计数值归纳" /></p>
+<h2 id="ram"><a class="anchor" href="#ram">#</a> RAM</h2>
+<p><img data-src="../../../images/twoportram.png" alt="多CPU RAM处理方式" title="多CPU RAM处理方式" /></p>
+<h2 id="cache与主存地址映射"><a class="anchor" href="#cache与主存地址映射">#</a> Cache 与主存地址映射</h2>
+<p>Cache 行：即 Cache 块，是 Cache 与主存之间传送数据的基本单位</p>
+<p><strong>组相连映射</strong><br />
+将 Cache 空间分成大小相同的组，主存的一个数据块可以装入一组内的任何一个位置，即组<br />
+间采取直接映射，而组内采取全相联映射。设置中每组有 N 个 Cache 行，称为 N 路组相联。</p>
+<div class="note info">
+<p>为什么使用多级缓存？？？</p>
+</div>
+<p><img data-src="../../../images/multi_cache.png" alt="&quot;cache写策略&quot;" title="cache写策略" /></p>
+<p><img data-src="../../../images/cache_work_reason.png" alt="&quot;Cache工作原理知识图&quot;" title="Cache工作原理知识图" /></p>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>os</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>计算机组成原理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法</title>
+    <url>/xz.github.io/computer-science/algorithm/algorithms/algorithms/</url>
+    <content><![CDATA[<h1 id="leetcode"><a class="anchor" href="#leetcode">#</a> leetcode</h1>
+<h2 id="双指针"><a class="anchor" href="#双指针">#</a> 双指针</h2>
+<h3 id="1-有序数组的-two-sum"><a class="anchor" href="#1-有序数组的-two-sum">#</a> 1 - 有序数组的 Two Sum</h3>
+<p><span class="label info">-medium-</span></p>
+<figure class="highlight go"><figcaption data-lang="go"><span>有序数组的 Two Sum </span><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvdHdvLXN1bS1paS1pbnB1dC1hcnJheS1pcy1zb3J0ZWQv">题目链接</span></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">func</span> <span class="token function">twoSum</span><span class="token punctuation">(</span>numbers <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> target <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>	<span class="token keyword">var</span> <span class="token punctuation">(</span></pre></td></tr><tr><td data-num="3"></td><td><pre>		begin <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="4"></td><td><pre>		end   <span class="token operator">=</span> <span class="token function">len</span><span class="token punctuation">(</span>numbers<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token punctuation">)</span></pre></td></tr><tr class="marked"><td data-num="6"></td><td><pre>	arrays <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>	<span class="token keyword">for</span> begin <span class="token operator">&lt;</span> end <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>		sum <span class="token operator">:=</span> numbers<span class="token punctuation">[</span>begin<span class="token punctuation">]</span> <span class="token operator">+</span> numbers<span class="token punctuation">[</span>end<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="10"></td><td><pre>		<span class="token keyword">if</span> sum <span class="token operator">></span> target <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>			end<span class="token operator">--</span></pre></td></tr><tr><td data-num="12"></td><td><pre>		<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> sum <span class="token operator">&lt;</span> target <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>			begin<span class="token operator">++</span></pre></td></tr><tr><td data-num="14"></td><td><pre>		<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>			arrays<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> begin <span class="token operator">+</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="16"></td><td><pre>			arrays<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> end <span class="token operator">+</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="17"></td><td><pre>			<span class="token keyword">return</span> arrays</pre></td></tr><tr><td data-num="18"></td><td><pre>		<span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>	<span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>	<span class="token keyword">return</span> arrays</pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h3 id="2-sum-of-square-numbers"><a class="anchor" href="#2-sum-of-square-numbers">#</a> 2 - Sum of Square Numbers</h3>
+<p><span class="label success">✔️easy</span></p>
+<figure class="highlight go"><figcaption data-lang="go"><span>两数平方和 </span><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS1jbi5jb20vcHJvYmxlbXMvc3VtLW9mLXNxdWFyZS1udW1iZXJzL2Rlc2NyaXB0aW9uLw==">题目链接</span></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">import</span> <span class="token punctuation">(</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token string">"math"</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token keyword">func</span> <span class="token function">judgeSquareSum</span><span class="token punctuation">(</span>c <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr class="marked"><td data-num="6"></td><td><pre>    <span class="token keyword">var</span> <span class="token punctuation">(</span></pre></td></tr><tr><td data-num="7"></td><td><pre>	    a <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="8"></td><td><pre>		b  <span class="token operator">=</span> <span class="token function">int64</span><span class="token punctuation">(</span>math<span class="token punctuation">.</span><span class="token function">Sqrt</span><span class="token punctuation">(</span><span class="token function">float64</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">for</span> a <span class="token operator">&lt;=</span> b <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        sum <span class="token operator">:=</span> a <span class="token operator">*</span> a <span class="token operator">+</span> b <span class="token operator">*</span> b</pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">if</span> sum <span class="token operator">></span> c <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            b <span class="token operator">--</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span><span class="token keyword">else</span> <span class="token keyword">if</span> sum <span class="token operator">&lt;</span> c<span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            a <span class="token operator">++</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span><span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            <span class="token keyword">return</span> <span class="token boolean">true</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">return</span> <span class="token boolean">false</span></pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h3 id="3-反转字符串中的元音字符"><a class="anchor" href="#3-反转字符串中的元音字符">#</a> 3 - 反转字符串中的元音字符</h3>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>算法</category>
+        <category>算法题目</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/xz.github.io/computer-science/db/mysql/innodb/</url>
+    <content><![CDATA[<div class="note info">
+<p>本篇文章是针对于 <code>InnoDB存储引擎</code> 的阅读笔记。</p>
+<p>理解数据库的存储引擎可以更好地了解数据库运行的原理、索引算法、事务以及性能调优等。</p>
+<p>本文 主要是阅读 <code>《MySQL技术内幕: InnoDB存储引擎》</code> 所做的笔记。</p>
+<p>如果想亲自阅读的童鞋，这里附录了本书的 PDF 链接: <span class="exturl" data-url="aHR0cHM6Ly9hd2Vzb21lLXByb2dyYW1taW5nLWJvb2tzLmdpdGh1Yi5pby9teXNxbC9NeVNRTCVFNiU4QSU4MCVFNiU5QyVBRiVFNSU4NiU4NSVFNSVCOSU5NSVFRiVCQyU5QUlubm9EQiVFNSVBRCU5OCVFNSU4MiVBOCVFNSVCQyU5NSVFNiU5MyU4RS5wZGY=">《MySQL 技术内幕: InnoDB 存储引擎》</span></p>
+</div>
+<h1 id="第一章-mysql体系结构和存储引擎"><a class="anchor" href="#第一章-mysql体系结构和存储引擎">#</a> 第一章 MySQL 体系结构和存储引擎</h1>
+<h2 id="定义数据库和实例"><a class="anchor" href="#定义数据库和实例">#</a> 定义数据库和实例</h2>
+<figure class="highlight json"><figcaption data-lang="JSON"></figcaption><table><tr><td data-num="1"></td><td><pre>MySQL 是一个单进程多线程架构的数据库<span class="token punctuation">,</span>类似的有SQL Server、 Oracle Windows版</pre></td></tr></table></figure><div class="note info">
+<p><strong>什么是数据库？</strong> 物理操作系统文件或其他形式文件类型的结合<br />
+<strong>什么是数据库实例？</strong> 由数据库后台进程 / 线程以及一个共享内存区组成</p>
+</div>
+<h2 id="mysql体系结构"><a class="anchor" href="#mysql体系结构">#</a> Mysql 体系结构</h2>
+<p><img data-src="../../../../images/mysql_architect.png" alt="&quot;图1-1 Mysql体系结构&quot;" title="图1-1 Mysql体系结构" /></p>
+<p>如图 1-1 所示，MySQL 由以下几个部门组成</p>
+<blockquote>
+<ol>
+<li>链接池组件</li>
+<li>管理服务和工具组件</li>
+<li>SQL 接口组件</li>
+<li>查询分析器组件</li>
+<li>优化器组件</li>
+<li>缓冲 (Cache) 组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li>
+</ol>
+</blockquote>
+<blockquote>
+<p><strong>存储引擎是基于表的，而不是数据库</strong></p>
+</blockquote>
+<h2 id="mysql表存储引擎"><a class="anchor" href="#mysql表存储引擎">#</a> MySQL 表存储引擎</h2>
+<p><a href="innodb_eng/">InnoDB 存储引擎</a><br />
+<a href="myisam_eng/"> MyISAM 存储引擎</a></p>
+<hr />
+<h1 id="第二章-innodb存储引擎"><a class="anchor" href="#第二章-innodb存储引擎">#</a> 第二章 InnoDB 存储引擎</h1>
+<h2 id="innodb-体系架构"><a class="anchor" href="#innodb-体系架构">#</a> InnoDB 体系架构</h2>
+<h3 id="后台线程"><a class="anchor" href="#后台线程">#</a> 后台线程</h3>
+<p>默认情况下，InnoDB 存储引擎的后台线程有 7 个</p>
+<blockquote>
+<p>4 个 IO 线程 [分别是 insert buffer thread, log thread, read thread, write thread]<br />
+ 1 个 master thread<br />
+1 个锁 (lock) 监控线程<br />
+ 1 个错误监控线程<br />
+ InnoDB 引擎在 <strong> <code>master thread 上</code> </strong> 几乎实现了所有功能</p>
+</blockquote>
+<h3 id="内存"><a class="anchor" href="#内存">#</a> 内存</h3>
+<p>InnoDB 存储引擎 <code>内存</code> 由以下几个部分组成。</p>
+<blockquote>
+<p><strong>缓冲池</strong> (buffer pool)<br />
+<strong> 重做日志缓冲池</strong> (redo log buffer)<br />
+<strong> 额外内存池</strong> (additional memory pool)</p>
+</blockquote>
+<p><img data-src="../../../../images/memory_architect.png" alt="&quot;图2-1 InnoDB存储引擎内存结构&quot;" title="图2-1 InnoDB存储引擎内存结构" /></p>
+<div class="note info">
+<p>缓冲池是占最大内存的部分，用来存放各种数据的缓存<br />
+ <code>InnoDB存储引擎</code> 的工作方式是<strong>将数据库文件按 <code>页</code>  (每页 16K) 读取到缓冲池</strong>，然后按 <code>最近最少使用(LRU)</code>  算法来保存在缓冲池中的缓存数据</p>
+</div>
+<blockquote>
+<p><strong>什么是脏页</strong>？数据库文件需要修改时，先修改在缓冲池中的页。 发生修改后，该页即为 <code>脏页</code> 。</p>
+</blockquote>
+<h2 id="master-thread"><a class="anchor" href="#master-thread">#</a> master thread</h2>
+<p>master thread 的线程优先级最高，其由以下 4 个循环 (loop) 组成:</p>
+<blockquote>
+<ol>
+<li>主循环  (loop)</li>
+<li>后台循环 (background loop)</li>
+<li>刷新循环 (flush loop)</li>
+<li>暂停循环 (suspend loop)</li>
+</ol>
+</blockquote>
+<p>master thread 会根据数据库运行的状态在这几个循环中进行切换</p>
+<h3 id="自适应哈希索引"><a class="anchor" href="#自适应哈希索引">#</a> 自适应哈希索引</h3>
+<p><code>InnoDB存储引擎</code> 会监控对表上索引的查找，如果观察到建立哈希索引可以带来速度上的提升，则建立哈希索引 (所以称为自适应的).<br />
+ 自适应哈希索引通过缓冲池的 B + 树构造而来，因此建立的速度很快。<br />
+而且不需要将整个表都建哈希索引， <code>InnoDB存储引擎</code> 引擎会自动根据访问的频率和模式来为某些页建立哈希索引。</p>
+<div class="note info">
+<p><strong>哈希索引只能用来搜索等值的查询，对于如范围查找，是不能使用的。</strong></p>
+</div>
+<hr />
+<h1 id="第四章-表"><a class="anchor" href="#第四章-表">#</a> 第四章 表</h1>
+<p>简单的说，表就是关于特定实体的数据集合，这也是关系型数据库模型的核心<br />
+在 <code>InnoDB存储引擎</code> 表中，每张表都有个主键，如果在创建表时没有显式地定义主键 (Primary Key), 则 <code>InnoDB存储引擎</code> 会按如下方式选择或创建主键:</p>
+<blockquote>
+<ol>
+<li>先看表中是否有非空的 <code>唯一索引(Unique NOT NULL)</code> , 如果有，则该列即为主键。</li>
+<li>不符合上述条件， <code>InnoDB存储引擎</code> 会自动创建一个 <strong>6 个字节</strong> 大小的指针。</li>
+</ol>
+</blockquote>
+<h2 id="innodb逻辑存储结构"><a class="anchor" href="#innodb逻辑存储结构">#</a> InnoDB 逻辑存储结构</h2>
+<p><code>InnoDB存储引擎</code> 所有的数据都被逻辑地存放在一个空间中 --- <strong> <code>表空间</code> </strong><br />
+ <code>表空间</code> 又由  <code>段(segment)</code> , <code>区(extent)</code> , <code>页(page)</code>  组成.(页有时也被称为 <code>块block</code> )</p>
+<p><img data-src="../../../../images/innodb_store_structure.png" alt="&quot;图4-1 InnoDB存储引擎的逻辑存储结构&quot;" title="图4-1 InnoDB存储引擎的逻辑存储结构" /></p>
+<h3 id="段segment"><a class="anchor" href="#段segment">#</a> 段 (segment)</h3>
+<p>图 4-1 显示了表空间由各个段组成。常见的有 <code>数据段</code> ， <code>索引段</code> ， <code>回滚段</code> 等。<br />
+ <code>数据段</code> 即为 B + 树的叶子节点 (leaf node segment),  <code>索引段</code> 即为 B + 树的非叶子节点 (non-leaf node segment)</p>
+<h3 id="区extent"><a class="anchor" href="#区extent">#</a> 区 (extent)</h3>
+<p>区是由 64 个 连续的页组成，每个页大小为 16KB, 即每个区的大小为 1MB。<br />
+对于大的数据段， <code>InnoDB存储引擎</code> 最多每次可以申请 4 个区，以此来保证数据的顺序性能。</p>
+<h3 id="页page-块block"><a class="anchor" href="#页page-块block">#</a> 页 (page) / 块 (block)</h3>
+<p>页时 InnoDB 磁盘管理的最小单位，每个页大小为 16KB。<br />
+常见的页类型有:</p>
+<blockquote>
+<ol>
+<li>数据页 (B-tree Node)</li>
+<li>Undo 页 (Undo Log Page)</li>
+<li>系统页 (System Page)</li>
+<li>事务数据页 (Transaction system Page)</li>
+<li>插入缓冲位图页 (Insert Buffer Bitmap)</li>
+<li>插入缓冲空闲列表页 (Insert Buffer Free List)</li>
+<li>未压缩的二进制大对象页 (Uncompressed BLOB Page)</li>
+<li>压缩的二进制大对象页 (Compressed BLOB Page)</li>
+</ol>
+</blockquote>
+<h3 id="行"><a class="anchor" href="#行">#</a> 行</h3>
+<p><code>InnoDB存储引擎</code> 是面向 <code>行</code> 的 (row-oriented), 数据的存放按 <code>行</code> 进行存放。<br />
+每个页存放的行记录是 hard-coding 的，最多允许存放 (16 * 1024B / 2) - 200 行的记录，即 7992 行记录。<br />
+计算方式：每页大小为 16KB, 每个记录最少 2 字节，每个页都要预留 200 字节。<br />
+解释：这两行记录是虚拟记录，用来限定记录的边界，最大虚拟记录和最小虚拟记录</p>
+<h2 id="约束"><a class="anchor" href="#约束">#</a> 约束</h2>
+<h3 id="数据完整性"><a class="anchor" href="#数据完整性">#</a> 数据完整性</h3>
+<p>数据完整性有三种形式</p>
+<blockquote>
+<ol>
+<li>实体完整性：保证表中有一个主键</li>
+<li>域完整性：保证数据的值满足特定的条件 (如，选择合适的数据类型可以确保一个数据值满足特定条件)</li>
+<li>参照完整性：保证两张表之间的关系</li>
+</ol>
+</blockquote>
+<p><code>InnoDB存储引擎</code> 提供以下几种约束</p>
+<blockquote>
+<ol>
+<li>Primary Key</li>
+<li>Unique Key</li>
+<li>Foreign Key</li>
+<li>Default</li>
+<li>NOT NULL</li>
+</ol>
+</blockquote>
+<h3 id="约束和索引的区别"><a class="anchor" href="#约束和索引的区别">#</a> 约束和索引的区别</h3>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre>当创建一个唯一索引时，也就创建了一个唯一的约束。</pre></td></tr><tr><td data-num="2"></td><td><pre> 但是约束和索引的概念不同，约束更是一个逻辑的概念，用来保证数据完整性。而索引是一个数据结构，有逻辑上的概念，在数据库中更是一个物理存储方式</pre></td></tr></table></figure><h2 id="视图"><a class="anchor" href="#视图">#</a> 视图</h2>
+<blockquote>
+<p>视图是一个命名的虚表，它由一个查询来定义，可以当作表使用，但视图中的数据没有物理变现形式。</p>
+</blockquote>
+<hr />
+<h1 id="第五章-索引与算法"><a class="anchor" href="#第五章-索引与算法">#</a> 第五章 索引与算法</h1>
+<p><code>InnoDB存储引擎</code> 支持常见的两种索引：B + 树索引和哈希索引。<br />
+B + 树索引的 B 不是代表二叉 (binary), 而是代表平衡 (balance)。<br />
+B + 树从最早的平衡二叉树演化而来，但是 B + 树不是一个二叉树。</p>
+<div class="note info">
+<p>B + 树索引并不能找到一个给定键值的具体 <code>行</code> ，而只能找到被查找数据行所在的 <code>页</code> 。<br />
+然后数据库通过把 <code>页</code> 读入 <code>内存</code> ，再在 <code>内存</code> 中进行查找，最后得到要查找的数据。</p>
+</div>
+<h2 id="b树"><a class="anchor" href="#b树">#</a> B + 树</h2>
+<blockquote>
+<ol>
+<li>非叶子节点不存储 Data, 只存储索引 (冗余), 可以放更多的索引。 (索引 <code>块</code>  / <code>页</code> 内存 16KB ，其中地址块 6B)</li>
+<li>叶子节点包含所有索引字段</li>
+<li>叶子节点用指针连接 (双向指针), 提高区间访问的性能</li>
+</ol>
+</blockquote>
+<h2 id="b树索引"><a class="anchor" href="#b树索引">#</a> B + 树索引</h2>
+<p>数据库中的 B + 树索引可以分为聚集索引 (clustered index) 和辅助聚集索引 (secondary index). 其内部都是 B + 树的，即高度平衡的，叶子节点存放着所有的数据。<br />
+聚集索引和非聚集索引的不同是：聚集索引的叶子节点存放的是一整行的信息。</p>
+<h3 id="聚集索引"><a class="anchor" href="#聚集索引">#</a> 聚集索引</h3>
+<blockquote>
+<p><code>InnoDB存储引擎</code> 是索引组织表，即表中数据按照主键顺序存放。<br />
+聚集索引就是按照每张表的主键构造一颗 B + 树，并且叶子节点中存放着整张表的行记录数据，因此也让聚集索引的叶子节点成为数据页。<br />
+由于实际的数据页只能按照一颗 B + 树进行排序，因此每张表只能有一个聚集索引。</p>
+</blockquote>
+<blockquote>
+<p>聚集索引的存储并不是物理上的连续，是逻辑上的连续。</p>
+<ol>
+<li>页通过双向链表连接，页按照主键的顺序排列。</li>
+<li>每个页中的记录也是通过双向链表进行维护。</li>
+</ol>
+</blockquote>
+<h3 id="辅助索引"><a class="anchor" href="#辅助索引">#</a> 辅助索引</h3>
+<p>对于辅助索引 (也称非聚集索引)，叶级别不包含行的全部数据。<br />
+叶节点除了包含用来排序的 key 以外，每个叶级别中的索引行还包含了一个书签 (bookmark)，该书签用来告诉 InnoDB 存储引擎好到与索引对应的行数据。</p>
+<h2 id="b树索引的使用"><a class="anchor" href="#b树索引的使用">#</a> B + 树索引的使用</h2>
+<h3 id="什么时候用-b树索引"><a class="anchor" href="#什么时候用-b树索引">#</a> 什么时候用 B + 树索引</h3>
+<p>当访问高选择性字段并从表中取出很少一部分行时，对这个字段添加 B + 树索引是非常有必要的。</p>
+<h3 id="顺序读-随机读和预读取"><a class="anchor" href="#顺序读-随机读和预读取">#</a> 顺序读、随机读和预读取</h3>
+<h3 id="辅助索引的优化使用"><a class="anchor" href="#辅助索引的优化使用">#</a> 辅助索引的优化使用</h3>
+<p>辅助索引的叶节点包含有主键，但是辅助索引的叶并不包含完整的行信息。<br />
+因此 <code>InnoDB存储引擎</code> 总是会先从辅助索引的叶节点判断是否能得到所需的数据。</p>
+<h3 id="联合索引"><a class="anchor" href="#联合索引">#</a> 联合索引</h3>
+<p>联合索引是指对表上的多个列做索引。<br />
+从本质来说，联合索引还是一个 B + 树，只是键值的数量不是 1，而是大于等于 2</p>
+<div class="note info">
+<p>最左前缀原则<br />
+联合索引按照这个原则才能走索引</p>
+</div>
+<h2 id="哈希算法"><a class="anchor" href="#哈希算法">#</a> 哈希算法</h2>
+<p><code>InnoDB存储引擎</code> 中自适应哈希索引使用的是散列表 (Hash Table) 的数据结构。<br />
+散列表不止存在于自适应哈希中，在每个数据库中都存在。</p>
+<p>数据库中一般采用 链接法 (chaining) 解决 Hash 碰撞，哈希函数采用 除法散列方式: h (k) = k mod m</p>
+<h1 id="锁"><a class="anchor" href="#锁">#</a> 锁</h1>
+<p>锁是数据库系统区别于文件系统的一个关键特征。锁机制用于管理对共享资源的并发访问。<br />
+对于 <code>MyISAM引擎</code> 来说，其锁就是表锁。并发插入时性能会差点。</p>
+<h2 id="innodb存储引擎中的锁"><a class="anchor" href="#innodb存储引擎中的锁">#</a> InnoDB 存储引擎中的锁</h2>
+<h3 id="锁的类型"><a class="anchor" href="#锁的类型">#</a> 锁的类型</h3>
+<p><code>InnoDB存储引擎</code> 实现了如下两种标准的行级锁:</p>
+<blockquote>
+<ol>
+<li>共享锁 (S Lock)，允许事务读一行数据。</li>
+<li>排他锁 (X Lock)，允许事务删除或更新一行数据。<br />
+ <code>InnoDB存储引擎</code> 支持多粒度锁定，这种锁定允许在行级上的锁和表级上的锁同时存在。<br />
+为了支持在不同粒度上进行加锁操作， <code>InnoDB存储引擎</code> 支持一种额外的锁方式：意向锁。<br />
+ <code>意向锁</code> 是表级别的锁，目的是为了在一个事务中揭示下一行将被请求的锁的类型。目前支持两种意向锁：</li>
+<li>意向共享锁 (IS Lock)，事务想要获得一个表中某几行的共享锁。</li>
+<li>意向排他锁 (IX Lock)，事务想要获取一个表中某几行的排他锁。</li>
+</ol>
+</blockquote>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre>举个例子：</pre></td></tr><tr><td data-num="2"></td><td><pre>事务A锁住了表中的一行，让这一行只能读，不能写</pre></td></tr><tr><td data-num="3"></td><td><pre>之后，事务B申请整个表的写锁。</pre></td></tr><tr><td data-num="4"></td><td><pre>这是数据库要判断:</pre></td></tr><tr><td data-num="5"></td><td><pre>step1：判断表是否已被其他事务用表锁锁表</pre></td></tr><tr><td data-num="6"></td><td><pre>step2：判断表中的每一行是否已被行锁锁住。</pre></td></tr><tr><td data-num="7"></td><td><pre>当执行step2的时候需要扫全表，显然效率过低。</pre></td></tr><tr><td data-num="8"></td><td><pre>这时就有个意向锁。 事务A必须先申请表的意向共享锁，成功后再申请一行的行锁。</pre></td></tr></table></figure><h3 id="一致性的非锁定读操作"><a class="anchor" href="#一致性的非锁定读操作">#</a> 一致性的非锁定读操作</h3>
+<p>在默认情况下， <code>InnoDB存储引擎</code> 的 Select 操作使用一致性非锁定读。<br />
+一致性的非锁定行读 (consistent nonlocking read) 是指 <code>InnoDB存储引擎</code> 通过 <code>行多版本控制</code>  (multi versioning) 的方式来读取当前执行时间数据库中行的数据。<br />
+如果读取的行正在执行 Delete、Update 操作，这时读取操作不会因此而会等待行上锁的释放。相反， <code>InnoDB存储引擎</code> 会去读取行的一个 <code>快照数据</code> 。<br />
+ <code>快照数据</code> 是指该行之前版本的数据，该实现是通过 Undo 段来实现的。而 Undo 用来在事务中回滚数据，因此快照数据本身是没有额外的开销。</p>
+<div class="note info">
+<p>回滚可以用回滚日志（Undo Log）来实现，回滚日志记录着事务所执行的修改操作，在回滚时反向执行这些修改操作即可。<br />
+系统发生崩溃可以用重做日志（Redo Log）进行恢复，从而实现持久性。<br />
+与回滚日志记录数据的逻辑修改不同，重做日志记录的是数据页的物理修改。</p>
+</div>
+<p>快照数据是当前行数据之前的历史版本，可能有多个版本，一行可能不止一个快照数据，所以称其为 <code>行多版本技术</code> 。<br />
+由此带来的并发控制，称之为 <code>多版本并发控制</code>  (Multi Version Concurrency Control, MVCC)</p>
+<h4 id="快照读"><a class="anchor" href="#快照读">#</a> 快照读</h4>
+<p><code>MVCC</code>  的 SELECT 操作是快照中的数据，不需要进行加锁操作。</p>
+<pre><code class="language-mysql">SELECT * FROM table ...;
+</code></pre>
+<h4 id="当前读"><a class="anchor" href="#当前读">#</a> 当前读</h4>
+<p>MVCC 其它会对数据库进行修改的操作（INSERT、UPDATE、DELETE）需要进行加锁操作，从而读取最新的数据。可以看到 MVCC 并不是完全不用加锁，而只是避免了 SELECT 的加锁操作。</p>
+<pre><code class="language-mysql">INSERT;
+UPDATE;
+DELETE;
+</code></pre>
+<p>在进行 SELECT 操作时，可以强制指定进行加锁操作。以下第一个语句需要加 S 锁，第二个需要加 X 锁。<br />
+(这两个操作必须在一个事务中，当事务提交了，锁也释放了)</p>
+<figure class="highlight sql"><figcaption data-lang="SQL"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> <span class="token keyword">table</span> <span class="token keyword">WHERE</span> ? <span class="token keyword">lock</span> <span class="token operator">in</span> <span class="token keyword">share</span> <span class="token keyword">mode</span><span class="token punctuation">;</span> <span class="token comment"># 对行记录加一个 S 锁，其他事务可以向被锁定的记录加 S 锁，但对于加 X 锁，则会被阻塞。</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> <span class="token keyword">table</span> <span class="token keyword">WHERE</span> ? <span class="token keyword">for</span> <span class="token keyword">update</span><span class="token punctuation">;</span> <span class="token comment"># 对读取的行记录加上一个 X 锁，其他事物想在这些行上加任何锁时都会被阻塞。</span></pre></td></tr></table></figure><h2 id="锁的算法"><a class="anchor" href="#锁的算法">#</a> 锁的算法</h2>
+<p><code>InnoDB存储引擎</code> 有 3 个行锁的算法设计，分别是</p>
+<blockquote>
+<ol>
+<li>Record Lock: 单个行记录上的锁。(锁定一个记录上的索引，而不是记录本身。如果表没有设置索引，InnoDB 会自动在主键上创建隐藏的聚簇索引，因此 Record Locks 依然可以使用)</li>
+<li>Gap Lock: 间隙锁，锁定一个范围，但不包含记录本身</li>
+<li>Next-Key Lock: Gap Lock + Record Lock, 锁定一个范围，并且锁定记录本身</li>
+</ol>
+</blockquote>
+<p>在 Repeatable Read 模式下，Next-Key Lock 算法是默认的行记录锁定算法。</p>
+<h2 id="锁问题"><a class="anchor" href="#锁问题">#</a> 锁问题</h2>
+<h3 id="丢失修改"><a class="anchor" href="#丢失修改">#</a> 丢失修改</h3>
+<p>丢失修改指一个事务的更新操作被另外一个事务的更新操作替换。一般在现实生活中常会遇到，例如：T1 和 T2 两个事务都对一个数据进行修改，T1 先修改并提交生效，T2 随后修改，T2 的修改覆盖了 T1 的修改。</p>
+<blockquote>
+<p>顾名思义即，我修改了一个字段的值，当修改完成我 select 时，发现当前值不是我修改的值，即丢失修改。</p>
+</blockquote>
+<h3 id="读脏数据"><a class="anchor" href="#读脏数据">#</a> 读脏数据</h3>
+<p>读脏数据指在不同的事务下，当前事务可以读到另外事务未提交的数据。例如：T1 修改一个数据但未提交，T2 随后读取这个数据。如果 T1 撤销了这次修改，那么 T2 读取的数据是脏数据。</p>
+<blockquote>
+<p>比如，简单说就是我读到了别人的 draft 数据，该数据后又被撤销了。</p>
+</blockquote>
+<h3 id="不可重复读"><a class="anchor" href="#不可重复读">#</a> 不可重复读</h3>
+<p>不可重复读指在一个事务内多次读取同一数据集合。在这一事务还未结束前，另一事务也访问了该同一数据集合并做了修改，由于第二个事务的修改，第一次事务的两次读取的数据可能不一致。例如：T2 读取一个数据，T1 对该数据做了修改。如果 T2 再次读取这个数据，此时读取的结果和第一次读取的结果不同。</p>
+<blockquote>
+<p>比如，即我在一个事务内 多次读取一个数据，多次读取的不一致。</p>
+</blockquote>
+<div class="note info">
+<p>不可重复读和脏读的区别是： 脏读是读到未提交的数据。不可重复读 读到的确实是已经提交的数据，但是其违反了数据库事务一致性的要求。</p>
+</div>
+<p><code>InnoDB存储引擎</code> 中，通过使用 Next-Key Lock 算法来避免不可重复读的问题。在 MySQL 官方文档中，将不可重复读定义为 Phantom Problem，即幻读问题。<br />
+在 Next-Key Lock 算法下，对于索引的扫描，不仅仅是锁住扫描的索引，还锁住这些索引覆盖的范围 (gap)<br />
+ 因此对这个范围内的插入都是不允许的，这样就避免了另外的事务在这个范围内插入数据导致的不可重复的问题。</p>
+<h2 id="死锁"><a class="anchor" href="#死锁">#</a> 死锁</h2>
+<p><code>InnoDB存储引擎</code> 的后台线程中有一个锁 (lock) 监控线程，该线程负责查看可能的死锁问题，并字段告知用户。<br />
+ <code>InnoDB存储引擎</code> 不会回滚大部分的错误异常，但是死锁除外。发现死锁后， <code>InnoDB存储引擎</code> 会马上回滚一个事务。</p>
+<h1 id="事务"><a class="anchor" href="#事务">#</a> 事务</h1>
+<p>事务用来保证数据库的完整性 ---- 要么都修改，要么都不做<br />
+ <code>InnoDB存储引擎</code> 中的事务完全符合 ACID 的特性</p>
+<blockquote>
+<ol>
+<li>原子性 (Atomicity) 事务被视为不可分割的最小单元，事务的所有操作要么全部提交成功，要么全部失败回滚。</li>
+<li>一致性 (Consistency) 事务将 DB 从一种状态变为下一种一致的状态。事务开始和结束，DB 的完整性约束没有被破坏。</li>
+<li>隔离性 (Isolation) 一个事务的影响在该事务提交前对其他事务不可见。 ---- 通过锁来实现</li>
+<li>持久性 (Durability)</li>
+</ol>
+</blockquote>
+<h2 id="事务的实现"><a class="anchor" href="#事务的实现">#</a> 事务的实现</h2>
+<p>隔离性由 <code>锁</code> 来实现，原子性、一致性、持久性通过数据库的 redo 和 undo 来完成。</p>
+<h3 id="redo"><a class="anchor" href="#redo">#</a> redo</h3>
+<p><code>InnoDB存储引擎</code> 中，事务日志通过重做 (redo) 日志文件和 <code>InnoDB存储引擎</code> 的日志缓冲 (InnoDB Log Buffer) 来实现。</p>
+<ol>
+<li>当一个事务开始时，会记录该事务的一个 LSN (Log Sequence Number, 日志序列号)</li>
+<li>当事务执行时，会往 <code>InnoDB存储引擎</code> 的日志缓冲里插入 <code>事务日志</code> 。</li>
+<li>当事务提交时，必须将 <code>InnoDB存储引擎</code> 的 <code>日志</code> 缓冲写入磁盘。也就是在写数据之前，要先写日志。这种方式称为预写日志方式 (Write-Ahead Logging, WAL)<br />
+ <code>InnoDB存储引擎</code>  通过预写日志的方式来保证事务的完整性。<br />
+这意味着磁盘上存储的 <code>数据页</code> 和 <code>内存缓冲池</code> 中的 <code>页</code> 是不同步的，对于 <code>内存缓冲池</code> 中页的修改，先写入重做日志文件，再写入磁盘，因此是一种异步的方式。</li>
+</ol>
+<h3 id="undo"><a class="anchor" href="#undo">#</a> undo</h3>
+<p>undo 和 redo 正好相反，对 DB 进行修改时，DB 不但会产生 redo，而且还会产生一定的 undo, 即使执行的事务 / 语句失败了，或用 Rollback 回滚，就可以利用这些 undo 信息将数据回滚到修改之前的样子。<br />
+与 redo 不同的是，redo 存放在重做日志文件中，undo 存放在数据库内部的一个 <code>特殊段(segment)</code>  中，这称为 <code>undo(段)(undo segment)</code> ，undo 段位于 <code>共享表空间内</code> 。</p>
+<div class="note info">
+<p>对于 undo 页的回收是在  <code>master thread</code>  中进行的，  <code>master thread</code>  并不是每次都回收所有的 undo 页。</p>
+</div>
+<p>对于 <code>InnoDB存储引擎</code> ，DDL 语句都是隐式提交操作，所以需要注意  <code>TRUNCATE TABLE</code>  式 DDL 语言，是不能回滚的，而 DELETE 是 DML 语言，可以回滚。</p>
+<h2 id="事务的隔离级别"><a class="anchor" href="#事务的隔离级别">#</a> 事务的隔离级别</h2>
+<blockquote>
+<ol>
+<li>Read Uncommitted (读未提交)</li>
+<li>Read Committed   (读已提交)</li>
+<li>Repeatable Read  (可重复读)</li>
+<li>Serializable     (串行化)</li>
+</ol>
+</blockquote>
+<div class="note info">
+<p>补充: ReadView<br />
+MVCC 维护了一个 ReadView 结构，主要包含了当前系统未提交的事务列表 TRX_IDs {TRX_ID_1, TRX_ID_2, ...}，还有该列表的最小值 TRX_ID_MIN 和 TRX_ID_MAX。</p>
+<p>在进行 SELECT 操作时，根据数据行快照的 TRX_ID 与 TRX_ID_MIN 和 TRX_ID_MAX 之间的关系，从而判断数据行快照是否可以使用：<br />
+TRX_ID_MIN &lt;= TRX_ID &lt;= TRX_ID_MAX，需要根据隔离级别再进行判断：</p>
+<p>提交读：如果 TRX_ID 在 TRX_IDs 列表中，表示该数据行快照对应的事务还未提交，则该快照不可使用。否则表示已经提交，可以使用。<br />
+可重复读：都不可以使用。因为如果可以使用的话，那么其它事务也可以读到这个数据行快照并进行修改，那么当前事务再去读这个数据行得到的值就会发生改变，也就是出现了不可重复读问题。</p>
+</div>
+<h2 id="分布式事务"><a class="anchor" href="#分布式事务">#</a> 分布式事务</h2>
+<p>InnoDB 存储引擎支持 XA 事务，通过 XA 事务可以来支持分布式事务的实现。<br />
+分布式事务指的是允许多个独立的事务资源 (transactional resources) 参与一个全局的事务中。<br />
+全局事务要求在其中所有参与的事务要么都提交，要么都回滚。在使用分布式事务时，InnoDB 存储引擎的事务隔离级别必须设置为  <code>Serialiable</code> .</p>
+<p>分布式事务由一个或多个资源管理器 (Resource Managers)、一个事务管理器 (Transaction Manager) 和一个应用程序 (Application Program) 组成。</p>
+<blockquote>
+<ol>
+<li>资源管理器：提供访问事务资源的方法。通常一个数据库就是一个资源管理器。</li>
+<li>事务管理器：协调参与全局事务中的各个事务。需要和参与全局事务中的所有资源管理器进行通信。</li>
+<li>应用程序：定义事务的边界，指定全局事务中的操作。</li>
+</ol>
+</blockquote>
+<p>分布式事务使用两阶段提交 (two-phase commit) 的方式。 在第一阶段，所有参与全局事务的节点都开始准备 (Prepare), 告诉事务管理器它们准备好提交了。<br />
+在第二阶段， <code>事务管理器</code> 告诉 <code>资源管理器</code> 执行 Rollback 还是 Commit。如果任何一个节点显示不能提交，则所有的节点都被告知需要回滚。</p>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>db</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>DB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go基础语法</title>
+    <url>/xz.github.io/computer-science/go/go_base/go_base/</url>
+    <content><![CDATA[<h2 id="基本数据类型之间的转化"><a class="anchor" href="#基本数据类型之间的转化">#</a> 基本数据类型之间的转化</h2>
+<h3 id="整型之间的转化"><a class="anchor" href="#整型之间的转化">#</a> 整型之间的转化</h3>
+<figure class="highlight go"><figcaption data-lang="go"></figcaption><table><tr><td data-num="1"></td><td><pre>v1 <span class="token operator">:=</span> <span class="token function">uint</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>v2 <span class="token operator">:=</span> <span class="token function">int8</span><span class="token punctuation">(</span>v1<span class="token punctuation">)</span>  </pre></td></tr><tr><td data-num="3"></td><td><pre>fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>v2<span class="token punctuation">)</span> <span class="token comment">// ????,v2 = -1</span></pre></td></tr></table></figure><h3 id="原码-反码-补码"><a class="anchor" href="#原码-反码-补码">#</a> 原码、反码、补码</h3>
+<p><span class="exturl" data-url="aHR0cHM6Ly9nZWVrci5kZXYvcG9zdHMvZ28tdHlwZS1jb252ZXJzYXRpb24=">&quot;原码、反码、补码&quot;</span></p>
+]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB 引擎</title>
+    <url>/xz.github.io/computer-science/db/mysql/innodb/innodb_eng/</url>
+    <content><![CDATA[<p>InnoDB 存储支持事物，主要面向在线事物处理 (OLTP, Online Transaction Processing) 方面的应用。</p>
+<h1 id="特点"><a class="anchor" href="#特点">#</a> 特点:</h1>
+<blockquote>
+<ol>
+<li><strong>行锁设计</strong></li>
+<li><strong>支持外键</strong></li>
+<li><strong>支持类似于 Oracle 的非锁定读</strong>，即默认情况下读取操作不会产生锁</li>
+</ol>
+</blockquote>
+<div class="note warning">
+<p>InnoDB 通过使用 多版本并发控制 (MVCC) 来获得高并发性。</p>
+</div>
+<p><strong>实现了 4 种隔离</strong></p>
+<blockquote>
+<p>读未提交<br />
+读已提交<br />
+<strong>可重复读</strong> (默认)<br />
+ 可串行化</p>
+</blockquote>
+<div class="note primary">
+<p>同时 InnoDB 使用 next-key locking 策略来避免幻读 (phanton)</p>
+</div>
+<div class="note info">
+<p>InnoDB 存储引擎还提供了 插入缓存、二次写、自适应哈希索引、预读等高性能和高可用的功能</p>
+</div>
+<div class="note info">
+<p>InnoDB 存储引擎采用了 聚集 (clustered) 的方式，每张表的存储都按主键的顺序存放。<br />
+如果没有显示地在表定义时指定主键、InnoDB 存储引擎会为每一行生成一个 6 字节的 RowID，并以此作为主键</p>
+</div>
+]]></content>
+      <tags>
+        <tag>笔记</tag>
+        <tag>DB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyISAM 引擎</title>
+    <url>/xz.github.io/computer-science/db/mysql/innodb/myisam_eng/</url>
+    <content><![CDATA[<h1 id="特点"><a class="anchor" href="#特点">#</a> 特点:</h1>
+<blockquote>
+<ol>
+<li><strong>不支持事务</strong></li>
+<li><strong>只支持表锁</strong></li>
+<li><strong>支持 FULLTEXT 类型的全文索引</strong></li>
+<li><strong>对于一些 OLAP (在线分析处理) 操作速度快</strong></li>
+</ol>
+</blockquote>
+<div class="note warning">
+</div>
+<div class="note primary">
+</div>
+<div class="note info">
+</div>
+<div class="note info">
+</div>
+]]></content>
+      <tags>
+        <tag>笔记</tag>
+        <tag>DB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MongoDB</title>
+    <url>/xz.github.io/computer-science/db/mongodb/mongodb/</url>
+    <content><![CDATA[<h1 id="相关文档"><a class="anchor" href="#相关文档">#</a> 相关文档</h1>
+<div class="links"><div class="item" title="Mongodb" style="--block-color:#e9546b;"><span class="exturl image" data-url="aHR0cHM6Ly93d3cubW9uZ29kYi5jb20vZG9jcy9tYW51YWwvdHV0b3JpYWwv" data-background-image="https://webimages.mongodb.com/_com_assets/cms/kuyjf3vea2hg34taa-horizontal_default_slate_blue.svg?auto=format%252Ccompress"></span>
+          <div class="info">
+          <span class="exturl title" data-url="aHR0cHM6Ly93d3cubW9uZ29kYi5jb20vZG9jcy9tYW51YWwvdHV0b3JpYWwv">Mongodb官方Doc文档</span>
+          <p class="desc">Mongodb官方Doc文档</p>
+          </div></div></div>
+<h1 id="基础知识"><a class="anchor" href="#基础知识">#</a> 基础知识</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Mysql</th>
+<th>MongoDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据库</td>
+<td><code>database</code></td>
+<td><code>database</code></td>
+</tr>
+<tr>
+<td>表 / 集合</td>
+<td><code>table</code></td>
+<td><code>collection</code></td>
+</tr>
+<tr>
+<td>记录 / 文档</td>
+<td><code>row, column</code></td>
+<td><code>document</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="运行mogndb"><a class="anchor" href="#运行mogndb">#</a> 运行 mogndb</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>命令行提示符</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>./bin/mongo -uxxx -pxxxx xxxxx:27017/admin</pre></td></tr></table></figure><h2 id="基础命令"><a class="anchor" href="#基础命令">#</a> 基础命令</h2>
+<h3 id="数据库命令"><a class="anchor" href="#数据库命令">#</a> 数据库命令</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>基础命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>show dbs <span class="token comment">#查看所有数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>admin   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre>config  <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token builtin class-name">local</span>   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre><span class="token builtin class-name">test</span>    <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="6"></td><td data-command="[root@localhost] $"></td><td><pre>use testdb <span class="token comment"># 切换到指定数据库，如果不存在该数据库就创建</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre>switched to db testdb</pre></td></tr><tr><td data-num="8"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment"># 显示当前所在数据库</span></pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre>testdb</pre></td></tr><tr><td data-num="10"></td><td data-command="[root@localhost] $"></td><td><pre>db.dropDatabase<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># 删除当前数据库</span></pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"ok"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td data-command="[root@localhost] $"></td><td><pre>show tables <span class="token operator">|</span> show collections <span class="token comment"># 查看当前数据库所有的集合</span></pre></td></tr></table></figure><h3 id="插入命令"><a class="anchor" href="#插入命令">#</a> 插入命令</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>插入命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.insert<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"张三"</span>,age:18,gender:<span class="token string">"male"</span>,_id:1<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>  <span class="token comment">#首次插入一条指定 _id 的数据</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre>WriteResult<span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token string">"nInserted"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.insert<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"张三"</span>,age:18,gender:<span class="token string">"male"</span>,_id:1<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token comment">#再次插入该数据</span></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre>WriteResult<span class="token punctuation">(</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre>        <span class="token string">"nInserted"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span>,</pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre>        <span class="token string">"writeError"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre>                <span class="token string">"code"</span> <span class="token builtin class-name">:</span> <span class="token number">11000</span>,</pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre>                <span class="token string">"errmsg"</span> <span class="token builtin class-name">:</span> <span class="token string">"E11000 duplicate key error collection: xmqdatabase.stus index: _id_ dup key: &#123; _id: <span class="token entity" title="\&quot;">\"</span>1<span class="token entity" title="\&quot;">\"</span> &#125;"</span></pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.insert<span class="token punctuation">(</span><span class="token punctuation">[</span></pre></td></tr><tr><td data-num="14"></td><td data-command="[root@localhost] $"></td><td><pre>  <span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span>,age:16,gender:<span class="token string">"male"</span><span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="15"></td><td data-command="[root@localhost] $"></td><td><pre>  <span class="token punctuation">&#123;</span>name:<span class="token string">"王五"</span>,age:20,gender:<span class="token string">"female"</span>,<span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="16"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre>BulkWriteResult<span class="token punctuation">(</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td data-command=""></td><td><pre>        <span class="token string">"writeErrors"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">[</span> <span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre>        <span class="token string">"writeConcernErrors"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">[</span> <span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="20"></td><td data-command=""></td><td><pre>        <span class="token string">"nInserted"</span> <span class="token builtin class-name">:</span> <span class="token number">2</span>,</pre></td></tr><tr><td data-num="21"></td><td data-command=""></td><td><pre>        <span class="token string">"nUpserted"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span>,</pre></td></tr><tr><td data-num="22"></td><td data-command=""></td><td><pre>        <span class="token string">"nMatched"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span>,</pre></td></tr><tr><td data-num="23"></td><td data-command=""></td><td><pre>        <span class="token string">"nModified"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span>,</pre></td></tr><tr><td data-num="24"></td><td data-command=""></td><td><pre>        <span class="token string">"nRemoved"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span>,</pre></td></tr><tr><td data-num="25"></td><td data-command=""></td><td><pre>        <span class="token string">"upserted"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">[</span> <span class="token punctuation">]</span></pre></td></tr><tr><td data-num="26"></td><td data-command=""></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="查询命令"><a class="anchor" href="#查询命令">#</a> 查询命令</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>查询命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.find<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#用来查询集合中所有符合条件的文档</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62720fcb163bfd68cf367881"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"张三"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">28</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"627210fb163bfd68cf367882"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"李四"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">16</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"male"</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"627210fb163bfd68cf367883"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"王五"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"female"</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token comment">#返回的是数组</span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"627210fb163bfd68cf367882"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"李四"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">16</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"male"</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.findOne<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token comment">#返回的是一个文档对象</span></pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre>        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"627210fb163bfd68cf367882"</span><span class="token punctuation">)</span>,</pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre>        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"李四"</span>,</pre></td></tr><tr><td data-num="13"></td><td data-command=""></td><td><pre>        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">16</span>,</pre></td></tr><tr><td data-num="14"></td><td data-command=""></td><td><pre>        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"male"</span></pre></td></tr><tr><td data-num="15"></td><td data-command=""></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.findOne<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.name</pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre>李四</pre></td></tr><tr><td data-num="18"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.count<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#统计数量</span></pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre><span class="token number">6</span></pre></td></tr><tr><td data-num="20"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>,<span class="token punctuation">&#123;</span><span class="token string">"name"</span>:1<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token comment"># 显示某字段列</span></pre></td></tr></table></figure><h3 id="修改命令"><a class="anchor" href="#修改命令">#</a> 修改命令</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>修改命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token comment"># 修改 db.collection.update (查询条件，新对象). 默认情况下会用新对象替换旧对象. update 函数默认情况下只改一个</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.updateOne () 修改一个符合条件的文档 </span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.updateMany () 修改多个符合条件的文档</span></pre></td></tr><tr><td data-num="6"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.update<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span>,<span class="token punctuation">&#123;</span>age:30<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> </pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre><span class="token comment"># 如果需求修改指定的属性而不是替换，则需要 使用 “修改操作符” 来完成 </span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token comment"># $set 可以用来修改文档的指定属性</span></pre></td></tr><tr><td data-num="9"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.updateOne<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span>,<span class="token punctuation">&#123;</span><span class="token variable">$set</span>:<span class="token punctuation">&#123;</span>age:30<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span> <span class="token string">"acknowledged"</span> <span class="token builtin class-name">:</span> true, <span class="token string">"matchedCount"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span>, <span class="token string">"modifiedCount"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre><span class="token comment"># $unset 可以用来删除文档的指定属性</span></pre></td></tr><tr><td data-num="12"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.updateOne<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span>,<span class="token punctuation">&#123;</span><span class="token variable">$unset</span>:<span class="token punctuation">&#123;</span>gender:<span class="token string">""</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="删除命令"><a class="anchor" href="#删除命令">#</a> 删除命令</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>删除命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token comment"># 修改 db.collection.remove (查询条件). 默认情况下会删除符合条件的所有文档</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.deleteOnew () 删除一个符合条件的文档 </span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.deleteMany () 删除多个符合条件的文档</span></pre></td></tr><tr><td data-num="6"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.remove<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name:<span class="token string">"李四"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> </pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre>WriteResult<span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token string">"nRemoved"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token comment"># 情况集合 (性能差)</span></pre></td></tr><tr><td data-num="9"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.remove<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre><span class="token comment"># 清空集合</span></pre></td></tr><tr><td data-num="11"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.drop<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr></table></figure><h3 id="排序"><a class="anchor" href="#排序">#</a> 排序</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>排序命令</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token comment"># sort () 可以用来指定文档的排序规则. sort () 需要传递一个对象来指定排序规则</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token comment"># -1 为降序，1 为生序</span></pre></td></tr><tr><td data-num="5"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.sort<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>age:1<span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token comment"># 指定想显示的字段。 1 为显示，0 为隐藏</span></pre></td></tr><tr><td data-num="7"></td><td data-command="[root@localhost] $"></td><td><pre>db.emp.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>,<span class="token punctuation">&#123;</span>name:1,_id:0<span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr></table></figure><h2 id="索引"><a class="anchor" href="#索引">#</a> 索引</h2>
+<h3 id="普通索引"><a class="anchor" href="#普通索引">#</a> 普通索引</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>创建索引</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token comment"># To create an index in the Mongo Shell, use db.collection.createIndex().</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.createIndex( &lt;key and index type specification>, &lt;options> )</span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token comment"># The following example creates a single key descending index on the age field:</span></pre></td></tr><tr><td data-num="7"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.createIndex<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>age:-1<span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td data-command=""></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre>        <span class="token string">"createdCollectionAutomatically"</span> <span class="token builtin class-name">:</span> false,</pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre>        <span class="token string">"numIndexesBefore"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span>,</pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre>        <span class="token string">"numIndexesAfter"</span> <span class="token builtin class-name">:</span> <span class="token number">2</span>,</pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre>        <span class="token string">"ok"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span>,</pre></td></tr><tr><td data-num="13"></td><td data-command=""></td><td><pre>        <span class="token string">"<span class="token variable">$clusterTime</span>"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td data-command=""></td><td><pre>                <span class="token string">"clusterTime"</span> <span class="token builtin class-name">:</span> Timestamp<span class="token punctuation">(</span><span class="token number">1651648120</span>, <span class="token number">3</span><span class="token punctuation">)</span>,</pre></td></tr><tr><td data-num="15"></td><td data-command=""></td><td><pre>                <span class="token string">"signature"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td data-command=""></td><td><pre>                        <span class="token string">"hash"</span> <span class="token builtin class-name">:</span> BinData<span class="token punctuation">(</span><span class="token number">0</span>,<span class="token string">"bu9+1jZ1GKcwNh5fLUiRnQ/1ETs="</span><span class="token punctuation">)</span>,</pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre>                        <span class="token string">"keyId"</span> <span class="token builtin class-name">:</span> NumberLong<span class="token punctuation">(</span><span class="token string">"7090864609103446020"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td data-command=""></td><td><pre>                <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="20"></td><td data-command=""></td><td><pre>        <span class="token string">"operationTime"</span> <span class="token builtin class-name">:</span> Timestamp<span class="token punctuation">(</span><span class="token number">1651648120</span>, <span class="token number">3</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td data-command=""></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="22"></td><td data-command="[root@localhost] $"></td><td><pre>db.collection.getIndexes<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td data-command=""></td><td><pre><span class="token punctuation">[</span></pre></td></tr><tr><td data-num="24"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="25"></td><td data-command=""></td><td><pre>                <span class="token string">"v"</span> <span class="token builtin class-name">:</span> <span class="token number">2</span>,</pre></td></tr><tr><td data-num="26"></td><td data-command=""></td><td><pre>                <span class="token string">"key"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="27"></td><td data-command=""></td><td><pre>                        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="28"></td><td data-command=""></td><td><pre>                <span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="29"></td><td data-command=""></td><td><pre>                <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"_id_"</span>,</pre></td></tr><tr><td data-num="30"></td><td data-command=""></td><td><pre>                <span class="token string">"ns"</span> <span class="token builtin class-name">:</span> <span class="token string">"database.stus"</span></pre></td></tr><tr><td data-num="31"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="32"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="33"></td><td data-command=""></td><td><pre>                <span class="token string">"v"</span> <span class="token builtin class-name">:</span> <span class="token number">2</span>,</pre></td></tr><tr><td data-num="34"></td><td data-command=""></td><td><pre>                <span class="token string">"key"</span> <span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="35"></td><td data-command=""></td><td><pre>                        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> -1</pre></td></tr><tr><td data-num="36"></td><td data-command=""></td><td><pre>                <span class="token punctuation">&#125;</span>,</pre></td></tr><tr><td data-num="37"></td><td data-command=""></td><td><pre>                <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"age_-1"</span>,</pre></td></tr><tr><td data-num="38"></td><td data-command=""></td><td><pre>                <span class="token string">"ns"</span> <span class="token builtin class-name">:</span> <span class="token string">"database.stus"</span></pre></td></tr><tr><td data-num="39"></td><td data-command=""></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="40"></td><td data-command=""></td><td><pre><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="41"></td><td data-command=""></td><td><pre><span class="token comment"># 自定义索引名称</span></pre></td></tr><tr><td data-num="42"></td><td data-command=""></td><td><pre><span class="token comment"># You can view index names using the db.collection.getIndexes() method. </span></pre></td></tr><tr><td data-num="43"></td><td data-command=""></td><td><pre><span class="token comment"># You cannot rename an index once created. Instead, you must drop and re-create the index with a new name.</span></pre></td></tr><tr><td data-num="44"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.createIndex<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="45"></td><td data-command="[root@localhost] $"></td><td><pre>  <span class="token punctuation">&#123;</span> age: <span class="token number">1</span>, name: -1 <span class="token punctuation">&#125;</span> ,</pre></td></tr><tr><td data-num="46"></td><td data-command="[root@localhost] $"></td><td><pre>  <span class="token punctuation">&#123;</span> name: <span class="token string">"query for people"</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="47"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="唯一索引"><a class="anchor" href="#唯一索引">#</a> 唯一索引</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"><span>唯一索引</span></figcaption><table><tr><td data-num="1"></td><td data-command="[root@localhost] $"></td><td><pre>db <span class="token comment">#查看当前数据库</span></pre></td></tr><tr><td data-num="2"></td><td data-command=""></td><td><pre>stus   <span class="token number">0</span>.000GB</pre></td></tr><tr><td data-num="3"></td><td data-command=""></td><td><pre><span class="token comment"># A unique index ensures that the indexed fields do not store duplicate values</span></pre></td></tr><tr><td data-num="4"></td><td data-command=""></td><td><pre><span class="token comment"># To create a unique index, use the db.collection.createIndex() method with the unique option set to true.</span></pre></td></tr><tr><td data-num="5"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td data-command=""></td><td><pre><span class="token comment"># 创建单个字段的唯一索引</span></pre></td></tr><tr><td data-num="7"></td><td data-command=""></td><td><pre><span class="token comment"># db.collection.createIndex( &lt;key and index type specification>, &#123; unique: true &#125; )</span></pre></td></tr><tr><td data-num="8"></td><td data-command="[root@localhost] $"></td><td><pre>db.stus.createIndex<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token string">"name"</span>:1<span class="token punctuation">&#125;</span>, <span class="token punctuation">&#123;</span> unique: <span class="token boolean">true</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td data-command=""></td><td><pre><span class="token comment"># Unique Compound Index</span></pre></td></tr><tr><td data-num="11"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td data-command=""></td><td><pre><span class="token comment"># To create a unique index on groupNumber, lastname, and firstname fields of the members collection</span></pre></td></tr><tr><td data-num="14"></td><td data-command=""></td><td><pre><span class="token comment"># db.members.createIndex( &#123; groupNumber: 1, lastname: 1, firstname: 1 &#125;, &#123; unique: true &#125; )</span></pre></td></tr><tr><td data-num="15"></td><td data-command=""></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td data-command="[root@localhost] $"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td data-command=""></td><td><pre><span class="token comment"># For another example, consider a collection with the following document:</span></pre></td></tr><tr><td data-num="18"></td><td data-command="[root@localhost] $"></td><td><pre><span class="token punctuation">&#123;</span> _id: <span class="token number">1</span>, a: <span class="token punctuation">[</span> <span class="token punctuation">&#123;</span> loc: <span class="token string">"A"</span>, qty: <span class="token number">5</span> <span class="token punctuation">&#125;</span>, <span class="token punctuation">&#123;</span> qty: <span class="token number">10</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">]</span> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td data-command=""></td><td><pre><span class="token comment"># Create a unique compound multikey index on a.loc and a.qty:</span></pre></td></tr><tr><td data-num="20"></td><td data-command=""></td><td><pre>db.collection.createIndex<span class="token punctuation">(</span> <span class="token punctuation">&#123;</span> <span class="token string">"a.loc"</span><span class="token builtin class-name">:</span> <span class="token number">1</span>, <span class="token string">"a.qty"</span><span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span>, <span class="token punctuation">&#123;</span> unique: <span class="token boolean">true</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">)</span></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>计算机科学</category>
+        <category>db</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>DB</tag>
+      </tags>
+  </entry>
+</search>
